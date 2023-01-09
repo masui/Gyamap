@@ -1,3 +1,8 @@
+#
+# 現在地の近所のPOIをリストする
+#
+alert("Kinjo")
+
 function loadScript (url) {
     return new Promise((resolve) => {
         const script = document.createElement('script')
