@@ -1,6 +1,6 @@
-#
-# 現在地の近所のPOIをリストする
-#
+//
+// 現在地の近所のPOIをリストする
+//
 alert("Kinjo")
 
 function loadScript (url) {
