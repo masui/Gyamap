@@ -10,7 +10,6 @@
   <body>
     
     <script type="text/javascript">
-      alert(100)
     function loadScript (url) {
         return new Promise((resolve) => {
             const script = document.createElement('script')
@@ -21,7 +20,7 @@
     }
     async function loadAll() {
         await loadScript('https://scrapbox.io/api/code/masui/test/test.js')
-        alert(data)
+        // alert(data)
     }
     $(function(){
         loadAll()
@@ -33,8 +32,7 @@
         mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
         position.coords.longitude;
-        alert(mapsurl)
-        // location.href = mapsurl;
+        location.href = mapsurl;
     }
     function errorCallback(error) {
         var err_msg = "";
