@@ -20,7 +20,7 @@ function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
         position.coords.longitude;
-    location.href = mapsurl;
+    alert(mapsurl)
 }
 function errorCallback(error) {
     var err_msg = "";
