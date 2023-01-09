@@ -8,7 +8,7 @@ function loadScript (url) {
 }
 async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/test/test.js')
-    // alert(data)
+    alert(data)
 }
 
 $(function(){
