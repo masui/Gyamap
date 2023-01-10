@@ -12,7 +12,7 @@ function loadScript (url) {
     })
 }
 async function loadAll() {
-    await loadScript('https://scrapbox.io/api/code/masui/poi/poi.js')
+    await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
 
 $(function(){
