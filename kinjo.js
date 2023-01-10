@@ -42,12 +42,25 @@ for(let i=0; i<data.length; i++){
 }
 alert(locations.length)
 
+var curlatitude, curlongitude
+
+function calc(){
+    for(var i=0;i<locations.length;i++){
+	entry = locations[i]
+	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
+    }
+    alert("calc() end")
+    alert(locations[0].distance)
+}
+
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
         position.coords.longitude;
-    alert(mapsurl)
+    curlatitude = position.coords.latitude
+    curlongitude = position.coords.longitude
+    calc()
 }
 function errorCallback(error) {
     var err_msg = "";
