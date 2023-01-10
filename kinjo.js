@@ -55,8 +55,10 @@ function calc(){
     for(var i=0;i<10;i++){
 	let loc = locations[i]
 	var li = $('<li>')
-	li.text(loc.title)
-	li.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
+	var e = $('<span>')
+	e.text(loc.title)
+	e.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
+	li.append(e)
 	li.append($('<span>').text(' '))
 	var map = $('<a>')
 	map.text('map')
