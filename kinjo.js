@@ -63,7 +63,7 @@ function calc(){
 	
 	let img = $('<img>')
 	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
-	img.attr('height','12px')
+	img.attr('height','14px')
 	let map = $('<a>')
 	//map.text('map')
 	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
