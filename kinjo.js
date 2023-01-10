@@ -13,11 +13,11 @@ function loadScript (url) {
 }
 async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/poi/poi.js')
-    alert(data)
 }
 
 $(function(){
     loadAll()
+    alert(data[2])
 })
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
