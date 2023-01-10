@@ -61,7 +61,7 @@ function calc(){
 	var map = $('<a>')
 	map.text('map')
 	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
-	li.append(a)
+	li.append(map)
 	$('#list').append(li)
     }
 }
