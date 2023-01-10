@@ -39,6 +39,7 @@ for(let i=0; i<data.length; i++){
     entry.latitude = m[3]
     entry.longitude = m[4]
     locations.push[entry]
+    console.log(locations.length)
 }
 alert(locations.length)
 
