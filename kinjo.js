@@ -1,7 +1,6 @@
 //
 // 現在地の近所のPOIをリストする
 //
-alert("近所")
 
 function loadScript (url) {
     return new Promise((resolve) => {
@@ -54,10 +53,9 @@ function calc(){
 	return a.distance > b.distance ? 1 : -1;
     });
     // alert(locations[0].distance)
-    console.log(locations[0].title)
-    console.log(locations[1].title)
-    console.log(locations[2].title)
-    console.log(locations[3].title)
+    for(var i=0;i<10;i++){
+	console.log(locations[i].title)
+    }
 }
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
