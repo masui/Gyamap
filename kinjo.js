@@ -1,7 +1,7 @@
 //
 // 現在地の近所のPOIをリストする
 //
-alert("Kinjo")
+alert("近所")
 
 function loadScript (url) {
     return new Promise((resolve) => {
