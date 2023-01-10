@@ -17,7 +17,8 @@ async function loadAll() {
 
 $(function(){
     // loadAll()
-    setTimeout(function(){ alert(data[2]) }, 5000)
+    // setTimeout(function(){ alert(data[2]) }, 5000)
+    alert(data[2])
 })
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
