@@ -16,7 +16,7 @@ async function loadAll() {
 }
 
 $(function(){
-    // loadAll()
+    await loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     alert(data[2])
 })
