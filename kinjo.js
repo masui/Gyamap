@@ -39,7 +39,6 @@ for(let i=0; i<data.length; i++){
     entry.longitude = m[4]
     locations.push(entry)
 }
-alert(locations.length)
 
 var curlatitude, curlongitude
 
@@ -48,13 +47,15 @@ function calc(){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
     }
-    alert("calc() end")
-    locations.sort((a, b) => {
+    locations.sort((a, b) => { // 近い順にソート
 	return a.distance > b.distance ? 1 : -1;
     });
     // alert(locations[0].distance)
     for(var i=0;i<10;i++){
 	console.log(locations[i].title)
+	var li = $('<li>')
+	li.text(locations[i].title)
+	$('#list').append(li)
     }
 }
 
