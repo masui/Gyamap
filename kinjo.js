@@ -34,7 +34,7 @@ for(let i=0; i<data.length; i++){
     let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+)/)
     entry = {}
     entry.project = 'xxxx'
-    alert(m)
+    console.log(m)
 }
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
