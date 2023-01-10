@@ -18,6 +18,7 @@ $(function(){
     //loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     // alert(data[2])
+    initGoogleMaps()
 })
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -42,6 +43,21 @@ for(let i=0; i<data.length; i++){
 }
 
 var curlatitude, curlongitude
+
+function initGoogleMaps(){
+    var latlng = new google.maps.LatLng(35.68115,139.767551); // 東京駅
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    // http://sites.google.com/site/gmapsapi3/Home/v3_reference
+    google.maps.event.addListener(map, 'dragend', locSearchAndDisplay);
+    google.maps.event.addListener(map, 'click', locSearchAndDisplay);
+    google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
+}
 
 function calc(){
     for(var i=0;i<locations.length;i++){

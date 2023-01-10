@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>近所のPOIを表示</title>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script src="https://scrapbox.io/api/code/masui/POI/poi.js"></script>
     <script src="./kinjo.js"></script>
@@ -17,6 +18,9 @@
   </style>
   <body>
     <h2>Kinjo: 現在地の近くの気になる場所や店を表示</h2>
+
+    <div id="map_canvas" style="width:280px;height:280px;"></div>
+    
     <ul id="list"></ul>
     <h2>Issues</h2>
     <ul>
