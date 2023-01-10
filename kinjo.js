@@ -38,8 +38,7 @@ for(let i=0; i<data.length; i++){
     entry.title = m[2]
     entry.latitude = m[3]
     entry.longitude = m[4]
-    locations.push[entry]
-    console.log(locations.length)
+    locations.push(entry)
 }
 alert(locations.length)
 
