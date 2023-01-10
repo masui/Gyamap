@@ -60,9 +60,13 @@ function calc(){
 	e.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
 	li.append(e)
 	li.append($('<span>').text(' '))
+	
+	let img = $('<img>')
+	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
 	let map = $('<a>')
-	map.text('map')
+	//map.text('map')
 	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
+	map.append(img)
 	li.append(map)
 	$('#list').append(li)
     }
