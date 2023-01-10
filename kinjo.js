@@ -51,7 +51,7 @@ function calc(){
     }
     alert("calc() end")
     locations.sort((a, b) => {
-	return a.distance > b.distance ? -1 : 1;
+	return a.distance > b.distance ? 1 : -1;
     });
     alert(locations[0].distance)
     alert(locations[0].title)
