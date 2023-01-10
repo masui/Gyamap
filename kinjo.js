@@ -53,8 +53,11 @@ function calc(){
     locations.sort((a, b) => {
 	return a.distance > b.distance ? 1 : -1;
     });
-    alert(locations[0].distance)
-    alert(locations[0].title)
+    // alert(locations[0].distance)
+    console.log(locations[0].title)
+    console.log(locations[1].title)
+    console.log(locations[2].title)
+    console.log(locations[3].title)
 }
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
