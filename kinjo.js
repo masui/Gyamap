@@ -54,14 +54,13 @@ function calc(){
     // alert(locations[0].distance)
     for(var i=0;i<10;i++){
 	let loc = locations[i]
-	console.log(loc.title)
 	var li = $('<li>')
 	li.text(loc.title)
 	li.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
 	li.append($('<span>').text(' '))
 	var map = $('<a>')
-	a.text('map')
-	a.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
+	map.text('map')
+	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
 	li.append(a)
 	$('#list').append(li)
     }
