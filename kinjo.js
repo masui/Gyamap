@@ -55,6 +55,10 @@ function calc(){
 	console.log(locations[i].title)
 	var li = $('<li>')
 	li.text(locations[i].title)
+	var a = $('<a>')
+	a.text('map')
+	a.attr('href',`https://scrapbox.io/${locations[i].project}/${locations[i].title}`)
+	li.append(a)
 	$('#list').append(li)
     }
 }
