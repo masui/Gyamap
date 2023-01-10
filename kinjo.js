@@ -31,12 +31,13 @@ function distance(lat1, lng1, lat2, lng2) {
 
 var locations = []
 for(let i=0; i<data.length; i++){
-    let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+)/)
+    let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
     entry = {}
     entry.project = m[1]
     entry.title = m[2]
     entry.latitude = m[3]
     entry.longitude = m[4]
+    entry.zoom = m[5]
     locations.push(entry)
 }
 
@@ -52,12 +53,15 @@ function calc(){
     });
     // alert(locations[0].distance)
     for(var i=0;i<10;i++){
-	console.log(locations[i].title)
+	let loc = locations[i]
+	console.log(loc.title)
 	var li = $('<li>')
-	li.text(locations[i].title)
-	var a = $('<a>')
+	li.text(loc.title)
+	li.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
+	li.append($('<span>').text(' '))
+	var map = $('<a>')
 	a.text('map')
-	a.attr('href',`https://scrapbox.io/${locations[i].project}/${locations[i].title}`)
+	a.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
 	li.append(a)
 	$('#list').append(li)
     }
