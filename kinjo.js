@@ -11,11 +11,12 @@ function loadScript (url) {
         document.body.appendChild(script)
     })
 }
-//async function loadAll() {
+async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
-//}
+}
     
 $(function(){
+    loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     alert(data[2])
 })
