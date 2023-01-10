@@ -16,10 +16,15 @@ async function loadAll() {
 }
     
 $(function(){
-    loadAll()
+    //loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     alert(data[2])
 })
+
+for(let i=0; i<data.length; i++){
+    let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+)/)
+    alert(m)
+}
 
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 function successCallback(position) {
