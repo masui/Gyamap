@@ -20,6 +20,7 @@ $(function(){
     //initGoogleMaps()
 
     console.log(location.href)
+    console.log(document.location.search)
     
     var script = document.createElement('script')
     var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
