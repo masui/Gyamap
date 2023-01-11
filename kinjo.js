@@ -52,9 +52,9 @@ function locSearchAndDisplay(){
 }
 
 function initGoogleMaps(lat,lng){
-    var latlng = new google.maps.LatLng(lat,lng); // 東京駅
+    var latlng = new google.maps.LatLng(lat,lng)
     var myOptions = {
-      zoom: 12,
+      zoom: 14,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
