@@ -14,7 +14,11 @@ async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
     
-loadAll()
+const script = document.createElement('script')
+const url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
+script.src = url
+//script.onload = resolve
+document.body.appendChild(script)
 
 $(function(){
     // setTimeout(function(){ alert(data[2]) }, 5000)
