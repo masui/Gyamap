@@ -71,6 +71,7 @@ function initGoogleMaps(lat,lng){
 }
 
 function calc(){
+    setlocations()
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
