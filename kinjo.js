@@ -14,6 +14,10 @@ async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
     
+$(function(){
+    // setTimeout(function(){ alert(data[2]) }, 5000)
+    // alert(data[2])
+    //initGoogleMaps()
 var script = document.createElement('script')
 var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
 script.src = url
@@ -22,10 +26,6 @@ console.log(document.body)
 console.log(script)
 document.body.appendChild(script)
 
-$(function(){
-    // setTimeout(function(){ alert(data[2]) }, 5000)
-    // alert(data[2])
-    //initGoogleMaps()
 })
 
 function distance(lat1, lng1, lat2, lng2) {
