@@ -48,17 +48,13 @@ function locSearchAndDisplay(){
     var center = map.getCenter();
     curlatitude = center.lat()
     curlongitude = center.lng()
-    console.log(curlatitude)
-    console.log(curlongitude)
     calc()
-    //locSearch(center.lat(),center.lng());
-    //photoZoomer.update(6.0,-tmpentries[0].y[0] + 40);
 }
 
 function initGoogleMaps(lat,lng){
     var latlng = new google.maps.LatLng(lat,lng); // 東京駅
     var myOptions = {
-      zoom: 8,
+      zoom: 12,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
