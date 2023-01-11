@@ -44,6 +44,14 @@ for(let i=0; i<data.length; i++){
 
 var curlatitude, curlongitude
 
+function locSearchAndDisplay(){
+    var center = map.getCenter();
+    console.log(center.lat())
+    console.log(center.lng());
+    //locSearch(center.lat(),center.lng());
+    //photoZoomer.update(6.0,-tmpentries[0].y[0] + 40);
+}
+
 function initGoogleMaps(){
     var latlng = new google.maps.LatLng(35.68115,139.767551); // 東京駅
     var myOptions = {
