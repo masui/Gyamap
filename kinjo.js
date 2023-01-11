@@ -14,8 +14,9 @@ async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
     
+loadAll()
+
 $(function(){
-    //loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     // alert(data[2])
     //initGoogleMaps()
