@@ -90,7 +90,7 @@ function initGoogleMaps(lat,lng){
     google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 
-    setlocations()
+    setTimeout(function(){ setlocations() },3000)
 }
 
 function calc(){
