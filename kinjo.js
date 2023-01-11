@@ -18,7 +18,7 @@ $(function(){
     //loadAll()
     // setTimeout(function(){ alert(data[2]) }, 5000)
     // alert(data[2])
-    initGoogleMaps()
+    //initGoogleMaps()
 })
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -52,8 +52,8 @@ function locSearchAndDisplay(){
     //photoZoomer.update(6.0,-tmpentries[0].y[0] + 40);
 }
 
-function initGoogleMaps(){
-    var latlng = new google.maps.LatLng(35.68115,139.767551); // 東京駅
+function initGoogleMaps(lat,lng){
+    var latlng = new google.maps.LatLng(lat,lng); // 東京駅
     var myOptions = {
       zoom: 8,
       center: latlng,
@@ -104,6 +104,7 @@ function successCallback(position) {
         position.coords.longitude;
     curlatitude = position.coords.latitude
     curlongitude = position.coords.longitude
+    initGoogleMaps(curlatitude,curlongitude)
     calc()
 }
 function errorCallback(error) {
