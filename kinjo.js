@@ -24,7 +24,9 @@ script.src = url
 //script.onload = resolve
 console.log(document.body)
 console.log(script)
-document.body.appendChild(script)
+    document.body.appendChild(script)
+
+    setlocations()
 
 })
 
@@ -37,16 +39,18 @@ function distance(lat1, lng1, lat2, lng2) {
     return 6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2));
 }
 
-var locations = []
-for(let i=0; i<data.length; i++){
-    let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
-    entry = {}
-    entry.project = m[1]
-    entry.title = m[2]
-    entry.latitude = m[3]
-    entry.longitude = m[4]
-    entry.zoom = m[5]
-    locations.push(entry)
+function setlocations(){
+    var locations = []
+    for(let i=0; i<data.length; i++){
+	let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
+	entry = {}
+	entry.project = m[1]
+	entry.title = m[2]
+	entry.latitude = m[3]
+	entry.longitude = m[4]
+	entry.zoom = m[5]
+	locations.push(entry)
+    }
 }
 
 var curlatitude, curlongitude
