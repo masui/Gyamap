@@ -25,9 +25,6 @@ script.src = url
 console.log(document.body)
 console.log(script)
     document.body.appendChild(script)
-
-    setlocations()
-
 })
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -75,6 +72,8 @@ function initGoogleMaps(lat,lng){
     google.maps.event.addListener(map, 'dragend', locSearchAndDisplay);
     google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
+
+    setlocations()
 }
 
 function calc(){
