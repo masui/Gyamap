@@ -14,10 +14,12 @@ async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
     
-const script = document.createElement('script')
-const url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
+var script = document.createElement('script')
+var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
 script.src = url
 //script.onload = resolve
+console.log(document.body)
+console.log(script)
 document.body.appendChild(script)
 
 $(function(){
