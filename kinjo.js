@@ -12,7 +12,6 @@ function loadScript (url) {
 }
 async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
-    setlocations()
 }
     
 loadAll()
@@ -33,17 +32,15 @@ function distance(lat1, lng1, lat2, lng2) {
 }
 
 var locations = []
-function setlocations(){
-    for(let i=0; i<data.length; i++){
-	let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
-	entry = {}
-	entry.project = m[1]
-	entry.title = m[2]
-	entry.latitude = m[3]
-	entry.longitude = m[4]
-	entry.zoom = m[5]
-	locations.push(entry)
-    }
+for(let i=0; i<data.length; i++){
+    let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
+    entry = {}
+    entry.project = m[1]
+    entry.title = m[2]
+    entry.latitude = m[3]
+    entry.longitude = m[4]
+    entry.zoom = m[5]
+    locations.push(entry)
 }
 
 var curlatitude, curlongitude
@@ -71,7 +68,6 @@ function initGoogleMaps(lat,lng){
 }
 
 function calc(){
-    setlocations()
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
