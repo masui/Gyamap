@@ -21,6 +21,16 @@ $(function(){
 
     console.log(location.href)
     console.log(document.location.search)
+
+    let args = {}
+    document.location.search.substring(1).split('&').forEach((s) => {
+        if(s != ''){
+            let [name, value] = s.split('=')
+            args[name] = decodeURIComponent(value)
+        }
+    })
+
+    console.log(args['url'])
     
     var script = document.createElement('script')
     var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
