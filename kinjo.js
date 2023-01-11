@@ -30,10 +30,12 @@ $(function(){
         }
     })
 
-    console.log(args['url'])
+    var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
+    if(args['url']){
+	url = args['url']
+    }
     
     var script = document.createElement('script')
-    var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
     script.src = url
     console.log(document.body)
     console.log(script)
