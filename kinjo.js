@@ -14,13 +14,14 @@ async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
     
+var curlatitude = null
+var curlongitude = null
+var curzoom = 10
+
 $(function(){
     // setTimeout(function(){ alert(data[2]) }, 5000)
     // alert(data[2])
     //initGoogleMaps()
-
-    console.log(location.href)
-    console.log(document.location.search)
 
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
@@ -33,6 +34,9 @@ $(function(){
     var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
     if(args['url']){
 	url = args['url']
+    }
+    
+    if(args['loc']){
     }
     
     var script = document.createElement('script')
@@ -64,8 +68,6 @@ function setlocations(){
 	locations.push(entry)
     }
 }
-
-var curlatitude, curlongitude
 
 function locSearchAndDisplay(){
     var center = map.getCenter();
