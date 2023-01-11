@@ -18,12 +18,14 @@ $(function(){
     // setTimeout(function(){ alert(data[2]) }, 5000)
     // alert(data[2])
     //initGoogleMaps()
-var script = document.createElement('script')
-var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
-script.src = url
-//script.onload = resolve
-console.log(document.body)
-console.log(script)
+
+    console.log(location.href)
+    
+    var script = document.createElement('script')
+    var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
+    script.src = url
+    console.log(document.body)
+    console.log(script)
     document.body.appendChild(script)
 })
 
