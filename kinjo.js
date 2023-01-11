@@ -38,12 +38,14 @@ $(function(){
     
     if(args['loc']){
     }
-    
+
+    /*
     var script = document.createElement('script')
     script.src = url
     console.log(document.body)
     console.log(script)
     document.body.appendChild(script)
+    */
 })
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -90,7 +92,7 @@ function initGoogleMaps(lat,lng){
     google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 
-    setTimeout(function(){ setlocations() },3000)
+    //setTimeout(function(){ setlocations() },3000)
 }
 
 function calc(){
