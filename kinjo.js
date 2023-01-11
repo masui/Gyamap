@@ -46,8 +46,11 @@ var curlatitude, curlongitude
 
 function locSearchAndDisplay(){
     var center = map.getCenter();
-    console.log(center.lat())
-    console.log(center.lng());
+    curlatitude = center.lat()
+    curlongitude = center.lng()
+    console.log(curlatitude)
+    console.log(curlongitude)
+    calc()
     //locSearch(center.lat(),center.lng());
     //photoZoomer.update(6.0,-tmpentries[0].y[0] + 40);
 }
@@ -76,6 +79,7 @@ function calc(){
 	return a.distance > b.distance ? 1 : -1;
     });
     // alert(locations[0].distance)
+    $('#list').empty()
     for(var i=0;i<10;i++){
 	let loc = locations[i]
 	let li = $('<li>')
