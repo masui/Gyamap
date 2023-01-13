@@ -21,6 +21,7 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
 });
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
+    // /helloWorld というURLでアクセスできる
     /*
     fetch('https://example.com/')
     	.then((response) => response.json())
@@ -32,8 +33,9 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 	.then((data) => response.send(data))
     */
     fetch('https://scrapbox.io/api/pages/Kinjo/%E8%A1%A3%E5%BC%B5%E5%B1%B1/text')
-	.then((response) => response.text())
+	.then((res) => res.text())
 	.then((data) => {
+	    // CORSを許す
 	    response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app')
 	    response.send(data)
 	})
