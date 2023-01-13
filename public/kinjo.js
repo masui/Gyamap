@@ -13,6 +13,10 @@ function loadScript (url) {
 async function loadAll() {
     await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
 }
+
+fetch('https://us-central1-masui-kinjo-95209.cloudfunctions.net/helloWorld')
+    .then((response) => response.text())
+    .then((data) => alert(data))
     
 var curlatitude = null
 var curlongitude = null
