@@ -22,6 +22,7 @@ function texturl(pagetitle){
     return `https://scrapbox.io/api/pages/Kinjo/${pagetitle}/text`
 }
 
+var datalist = [] // ブラウザに返すデータ
 async function getlist(url){
     if(visited_pages[url]) return
     visited_pages[url] = true
@@ -40,6 +41,14 @@ async function getlist(url){
 			urllist.push(s)
 			console.log(s)
 		    }
+		    let entry = {}
+		    entry = {}
+		    entry.project = 'Kinjo'
+		    entry.title = title
+		    entry.latitude = Number(match[2])
+		    entry.longitude = Number(match[3])
+		    entry.zoom = Number(match[4])
+		    datalist.push(entry)
 		}
 		else {
 		    match = line.match(/\[(.*)\]/)
@@ -58,11 +67,5 @@ exports.POI = functions.https.onRequest((request, response) => {
     // CORSを許す
     //response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app')
     response.set('Access-Control-Allow-Origin', '*')
-    response.send(urllist.join('\n'))
-
-    //res.json({result: `Message with ID: abcdefg added.`});
-    //response.json({result: `Message with ID: abcdefg added.`});
-
-    // response.json(JSON.stringify(urllist))
-    // response.text(urllist.join('\n'))
+    response.json(datalist)
 })

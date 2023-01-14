@@ -71,7 +71,7 @@ function setlocations___(){
     }
 }
 
-function setlocations(data){
+function setlocations_____(data){
     var a = data.split(/\n/)
     for(let i=0;i<a.length;i++){
 	let title, loc
@@ -97,6 +97,9 @@ function setlocations(data){
 	entry.zoom = zoom
 	locations.push(entry)
     }
+}
+function setlocations(data){
+    locations = JSON.parse(data)
 }
     
 function locSearchAndDisplay(){
