@@ -15,11 +15,6 @@ $(function(){
         }
     })
 
-    var url = 'https://scrapbox.io/api/code/masui/POI/poi.js'
-    if(args['url']){
-	url = args['url']
-    }
-
     let name = '増井俊之'
     if(args['name']){
 	name = args['name']
@@ -65,8 +60,6 @@ function initGoogleMaps(lat,lng){
     google.maps.event.addListener(map, 'dragend', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
-
-    // setlocations()
 }
 
 function calc(){
@@ -92,7 +85,6 @@ function calc(){
 	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
 	img.attr('height','14px')
 	let map = $('<a>')
-	//map.text('map')
 	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
 	map.append(img)
 	li.append(map)
