@@ -51,5 +51,7 @@ exports.POI = functions.https.onRequest((request, response) => {
 
     // CORSを許す
     response.set('Access-Control-Allow-Origin', '*')
+
+    // JSONデータをブラウザに返す
     response.json(datalist)
 })
