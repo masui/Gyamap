@@ -1,14 +1,6 @@
 const functions = require("firebase-functions");
 const fetch = require('node-fetch');
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
 // Take the text parameter passed to this HTTP endpoint and insert it into 
 // Firestore under the path /messages/:documentId/original
 exports.addMessage = functions.https.onRequest(async (req, res) => {
@@ -20,37 +12,8 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
   res.json({result: `Message with ID: ${writeResult.id} added.`});
 });
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    // /helloWorld というURLでアクセスできる
-    /*
-    fetch('https://example.com/')
-    	.then((response) => response.json())
-    	.then((data) => response.send('xxxxx'))
-    */
-    /*
-    fetch('https://scrapbox.io/api/pages/Kinjo/%E8%A1%A3%E5%BC%B5%E5%B1%B1/text')
-	.then((response) => response.text())
-	.then((data) => response.send(data))
-    */
-    fetch('https://scrapbox.io/api/pages/Kinjo/%E8%A1%A3%E5%BC%B5%E5%B1%B1/text')
-	.then((res) => res.text())
-	.then((data) => {
-	    // CORSを許す
-	    response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app')
-	    response.send(data)
-	})
-    // response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app/')
-    // response.send("Hello from Firebase!");
-    //return data
-    
-    //response.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST'); // DELETEだけは拒否
-    //response.set('Access-Control-Allow-Headers', 'Content-Type'); // Content-Typeのみを許可
-});
-
-
-
 //
-// [/Kinjo]のデータをリストする
+// [/kinjo]のデータをリストする
 //
 var urllist = []
 var visited_pages = {} // 同じページを再訪しないように
@@ -88,18 +51,18 @@ async function getlist(url){
 	})
 }
 
-async function xxxx(url){
-    let response = await getlist(url)
-}
-
 exports.POI = functions.https.onRequest((request, response) => {
     rooturl = texturl(request.query.name)
     getlist(rooturl)
 
-    
-    //response.send(request.query.name)
     // CORSを許す
     //response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app')
     response.set('Access-Control-Allow-Origin', '*')
     response.send(urllist.join('\n'))
+
+    //res.json({result: `Message with ID: abcdefg added.`});
+    //response.json({result: `Message with ID: abcdefg added.`});
+
+    // response.json(JSON.stringify(urllist))
+    // response.text(urllist.join('\n'))
 })
