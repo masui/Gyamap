@@ -2,22 +2,18 @@
 // 現在地の近所のPOIをリストする
 //
 
-function loadScript (url) {
-    return new Promise((resolve) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.onload = resolve
-        document.body.appendChild(script)
-    })
-}
-async function loadAll() {
-    await loadScript('https://scrapbox.io/api/code/masui/POI/poi.js')
-}
 
-fetch('https://us-central1-masui-kinjo-95209.cloudfunctions.net/helloWorld')
+// Firebase経由でデータを取得!
+//var fetcheddata
+/*
+fetch('https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=増井俊之')
     .then((response) => response.text())
-    .then((data) => alert(data))
-    
+    .then((data) => {
+	fetcheddata = data
+	setlocations()
+    })
+*/
+
 var curlatitude = null
 var curlongitude = null
 var curzoom = 10
@@ -39,17 +35,17 @@ $(function(){
     if(args['url']){
 	url = args['url']
     }
-    
-    if(args['loc']){
-    }
 
-    /*
-    var script = document.createElement('script')
-    script.src = url
-    console.log(document.body)
-    console.log(script)
-    document.body.appendChild(script)
-    */
+    let name = '増井俊之'
+    if(args['name']){
+	name = args['name']
+    }
+    fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
+	  .then((response) => response.text())
+	  .then((data) => {
+	      //fetcheddata = data
+	      setlocations(data)
+	  })
 })
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -62,7 +58,7 @@ function distance(lat1, lng1, lat2, lng2) {
 }
 
 var locations = []
-function setlocations(){
+function setlocations___(){
     for(let i=0; i<data.length; i++){
 	let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
 	entry = {}
@@ -75,6 +71,34 @@ function setlocations(){
     }
 }
 
+function setlocations(data){
+    var a = data.split(/\n/)
+    for(let i=0;i<a.length;i++){
+	let title, loc
+	[title,loc] = a[i].split(/\t/)
+	let lon,lat,zoom
+	[lat,lon,zoom] = loc.split(/,/)
+	let m,v
+	m = lat.match(/^(.)(.*)$/)
+	v = Number(m[2])
+	lat = v
+	if(m[1] == 'S') lat = -v
+	m = lon.match(/^(.)(.*)$/)
+	v = Number(m[2])
+	lon = v
+	if(m[1] == 'W') lon = -v
+	m = zoom.match(/^(.)(.*)$/)
+	zoom = Number(m[2])
+	entry = {}
+	entry.project = "Kinjo"
+	entry.title = title
+	entry.latitude = lat
+	entry.longitude = lon
+	entry.zoom = zoom
+	locations.push(entry)
+    }
+}
+    
 function locSearchAndDisplay(){
     var center = map.getCenter();
     curlatitude = center.lat()
@@ -93,10 +117,10 @@ function initGoogleMaps(lat,lng){
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', locSearchAndDisplay);
-    google.maps.event.addListener(map, 'click', locSearchAndDisplay);
-    google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
+    //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
+    //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 
-    setlocations()
+    // setlocations()
 }
 
 function calc(){
@@ -109,7 +133,7 @@ function calc(){
     });
     // alert(locations[0].distance)
     $('#list').empty()
-    for(var i=0;i<10;i++){
+    for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
 	let li = $('<li>')
 	let e = $('<a>')

@@ -47,5 +47,59 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     //response.set('Access-Control-Allow-Headers', 'Content-Type'); // Content-Typeのみを許可
 });
 
-// No 'Access-Control-Allow-Origin' header is present on the requested resource. 
 
+
+//
+// [/Kinjo]のデータをリストする
+//
+var urllist = []
+var visited_pages = {} // 同じページを再訪しないように
+
+function texturl(pagetitle){
+    return `https://scrapbox.io/api/pages/Kinjo/${pagetitle}/text`
+}
+
+async function getlist(url){
+    if(visited_pages[url]) return
+    visited_pages[url] = true
+
+    await fetch(url)
+	.then((res) => res.text())
+	.then((text) => {
+	    let a = text.split(/\n/)
+	    let title = a[0]
+	    for(let i=1;i<a.length;i++){
+		line = a[i]
+		match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
+		if(match){
+		    s = `${title}\t${match[1]}`
+		    if(! urllist.includes(s)){
+			urllist.push(s)
+			console.log(s)
+		    }
+		}
+		else {
+		    match = line.match(/\[(.*)\]/)
+		    if(match){
+			getlist(texturl(match[1]))
+		    }
+		}
+	    }
+	})
+}
+
+async function xxxx(url){
+    let response = await getlist(url)
+}
+
+exports.POI = functions.https.onRequest((request, response) => {
+    rooturl = texturl(request.query.name)
+    getlist(rooturl)
+
+    
+    //response.send(request.query.name)
+    // CORSを許す
+    //response.set('Access-Control-Allow-Origin', 'https://masui-kinjo-95209.web.app')
+    response.set('Access-Control-Allow-Origin', '*')
+    response.send(urllist.join('\n'))
+})

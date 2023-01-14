@@ -1,15 +1,29 @@
-rootpage = '増井俊之'
-rooturl = `https://scrapbox.io/api/pages/Kinjo/${rootpage}/text`
-
+//
+// [/Kinjo]のデータをリストする
+//
 var urllist = []
-var visited_pages = {}
+var visited_pages = {} // 同じページを再訪しないように
 
-function getlist(url){
-    // 同じページを再訪しないように
+function texturl(pagetitle){
+    return `https://scrapbox.io/api/pages/Kinjo/${pagetitle}/text`
+}
+
+rooturl = texturl('増井俊之')
+
+(async () => {
+    let response = await getlist(rooturl)
+    console.log("getlist() end")
+    // let user = await response.json();
+})()
+
+// getlist(rooturl)
+// console.log("getlist() end")
+
+async function getlist(url){
     if(visited_pages[url]) return
     visited_pages[url] = true
 
-    fetch(url)
+    await fetch(url)
 	.then((res) => res.text())
 	.then((text) => {
 	    let a = text.split(/\n/)
@@ -27,11 +41,9 @@ function getlist(url){
 		else {
 		    match = line.match(/\[(.*)\]/)
 		    if(match){
-			getlist(`https://scrapbox.io/api/pages/Kinjo/${match[1]}/text`)
+			getlist(texturl(match[1]))
 		    }
 		}
 	    }
 	})
 }
-
-getlist(rooturl)
