@@ -2,27 +2,11 @@
 // 現在地の近所のPOIをリストする
 //
 
-
-// Firebase経由でデータを取得!
-//var fetcheddata
-/*
-fetch('https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=増井俊之')
-    .then((response) => response.text())
-    .then((data) => {
-	fetcheddata = data
-	setlocations()
-    })
-*/
-
 var curlatitude = null
 var curlongitude = null
 var curzoom = 10
 
 $(function(){
-    // setTimeout(function(){ alert(data[2]) }, 5000)
-    // alert(data[2])
-    //initGoogleMaps()
-
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
         if(s != ''){
@@ -43,7 +27,6 @@ $(function(){
     fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
 	  .then((response) => response.text())
 	  .then((data) => {
-	      //fetcheddata = data
 	      setlocations(data)
 	  })
 })
@@ -58,46 +41,6 @@ function distance(lat1, lng1, lat2, lng2) {
 }
 
 var locations = []
-function setlocations___(){
-    for(let i=0; i<data.length; i++){
-	let m = data[i].match(/\[\/(.*)\/(.*)\]\s+.*@([\d\.]+),([\d\.]+),(\d+)z/)
-	entry = {}
-	entry.project = m[1]
-	entry.title = m[2]
-	entry.latitude = m[3]
-	entry.longitude = m[4]
-	entry.zoom = m[5]
-	locations.push(entry)
-    }
-}
-
-function setlocations_____(data){
-    var a = data.split(/\n/)
-    for(let i=0;i<a.length;i++){
-	let title, loc
-	[title,loc] = a[i].split(/\t/)
-	let lon,lat,zoom
-	[lat,lon,zoom] = loc.split(/,/)
-	let m,v
-	m = lat.match(/^(.)(.*)$/)
-	v = Number(m[2])
-	lat = v
-	if(m[1] == 'S') lat = -v
-	m = lon.match(/^(.)(.*)$/)
-	v = Number(m[2])
-	lon = v
-	if(m[1] == 'W') lon = -v
-	m = zoom.match(/^(.)(.*)$/)
-	zoom = Number(m[2])
-	entry = {}
-	entry.project = "Kinjo"
-	entry.title = title
-	entry.latitude = lat
-	entry.longitude = lon
-	entry.zoom = zoom
-	locations.push(entry)
-    }
-}
 function setlocations(data){
     locations = JSON.parse(data)
 }
