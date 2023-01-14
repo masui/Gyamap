@@ -7,6 +7,7 @@ var curlongitude = null
 var curzoom = 10
 
 $(function(){
+    // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
         if(s != ''){
@@ -15,6 +16,7 @@ $(function(){
         }
     })
 
+    // [/Kinjo] からデータ取得
     let name = '増井俊之'
     if(args['name']){
 	name = args['name']
@@ -70,7 +72,7 @@ function calc(){
     locations.sort((a, b) => { // 近い順にソート
 	return a.distance > b.distance ? 1 : -1;
     });
-    // alert(locations[0].distance)
+
     $('#list').empty()
     for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
