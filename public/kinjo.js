@@ -106,7 +106,8 @@ function showlists(){
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
 	img.on('click',function(e){
-	    alert(e.target.attr('latitude'))
+	    console.log(e)
+	    // alert(e.target.attr('latitude'))
 	})
 	/*
 	let map = $('<a>')
