@@ -40,9 +40,9 @@ async function getlist(url,res){
     let match
     for(let i=1;i<a.length;i++){
 	line = a[i]
-	match = line.match(/\[(http.*\.(png|jpg))\]/i) // 画像
+	match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
 	if(match){
-	    entry.image = match[1]
+	    entry.image = `${match[1]}.png`
 	}
 	else {
 	    match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
