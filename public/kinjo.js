@@ -11,6 +11,8 @@ var locations = [] // POIリスト
 var map // GoogleMapsオブジェクト
 
 $(function(){
+    alert("1")
+    
     // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
