@@ -28,6 +28,13 @@ $(function(){
 	    curpos.zoom = Number(match[3])
 	}
     }
+    if(curpos.latitude){
+	initGoogleMaps(curpos.latitude,curpos.longitude)
+	showlists()
+    }
+    else {
+	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }
 
     // [/Kinjo] からデータ取得
     let name = '増井俊之'
@@ -103,13 +110,6 @@ function showlists(){
     }
 }
 
-if(curpos.latitude){
-    initGoogleMaps(curpos.latitude,curpos.longitude)
-    showlists()
-}
-else {
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-}
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
