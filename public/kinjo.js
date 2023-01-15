@@ -1,5 +1,6 @@
 //
 // 現在地の近所のPOIをリストする
+// 位置データはFirebase functionで取得
 //
 
 var curlatitude = null
@@ -48,7 +49,7 @@ function locSearchAndDisplay(){
     var center = map.getCenter();
     curlatitude = center.lat()
     curlongitude = center.lng()
-    calc()
+    showlists()
 }
 
 function initGoogleMaps(lat,lng){
@@ -66,7 +67,7 @@ function initGoogleMaps(lat,lng){
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 }
 
-function calc(){
+function showlists(){
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
@@ -104,7 +105,7 @@ function successCallback(position) {
     curlatitude = position.coords.latitude
     curlongitude = position.coords.longitude
     initGoogleMaps(curlatitude,curlongitude)
-    calc()
+    showlists()
 }
 function errorCallback(error) {
     var err_msg = "";
