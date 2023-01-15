@@ -36,25 +36,33 @@ async function getlist(url,res){
     var text = await(response.text())
     let a = text.split(/\n/)
     let title = a[0]
+    let entry = {}
+    let match
     for(let i=1;i<a.length;i++){
 	line = a[i]
-	match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
+	match = line.match(/\[(http.*\.(png|jpg))\]/i) // 画像
 	if(match){
-	    let entry = {}
-	    entry = {}
-	    // entry.project = 'Kinjo'
-	    entry.title = title
-	    entry.latitude = Number(match[2]) // 西経の処理が必要!!
-	    entry.longitude = Number(match[3])
-	    entry.zoom = Number(match[4])
-	    datalist.push(entry)
+	    entry.image = match[1]
 	}
 	else {
-	    match = line.match(/\[(.*)\]/)
+	    match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
 	    if(match){
-		getlist(texturl(match[1]),null)
+		// entry.project = 'Kinjo'
+		entry.title = title
+		entry.latitude = Number(match[2]) // 西経の処理が必要!!
+		entry.longitude = Number(match[3])
+		entry.zoom = Number(match[4])
+	    }
+	    else {
+		match = line.match(/\[(.*)\]/)
+		if(match){
+		    getlist(texturl(match[1]),null)
+		}
 	    }
 	}
+    }
+    if(entry.latitude){
+	datalist.push(entry)
     }
     pending -= 1
 
