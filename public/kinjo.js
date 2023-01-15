@@ -21,7 +21,7 @@ $(function(){
     })
 
     if(args['loc']){
-	var match = args['loc'].match(/[NS](.*),[EW](.*),Z(.*)/)
+	var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
 	if(match){
 	    curpos.latitude = Number(match[1])
 	    curpos.longitude = Number(match[2])
