@@ -3,8 +3,6 @@
 // 位置データはFirebase functionで取得
 //
 
-//var curlatitude = null
-//var curlongitude = null
 var curpos = {}
 var curzoom = 10
 
@@ -21,6 +19,16 @@ $(function(){
             args[name] = decodeURIComponent(value)
         }
     })
+
+    if(args['loc']){
+	var match = args['loc'].match(/[NS](.*)[EW](.*)Z(.*)/)
+	if(match){
+	    location.latitude = Number(match[1])
+	    location.longitude = Number(match[2])
+	    location.zoom = Number(match[3])
+	    alert(location.latitude)
+	}
+    }
 
     // [/Kinjo] からデータ取得
     let name = '増井俊之'
