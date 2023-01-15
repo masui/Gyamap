@@ -10,7 +10,6 @@ var curzoom = 10
 $(function(){
     // URL引数の解析
     let args = {}
-    alert(document.location.search)
     document.location.search.substring(1).split('&').forEach((s) => {
         if(s != ''){
             let [name, value] = s.split('=')
