@@ -22,10 +22,12 @@ $(function(){
 	name = args['name']
     }
     fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
-	  .then((response) => response.text())
-	  .then((data) => {
-	      setlocations(data)
-	  })
+	.then((response) => response.text())
+	.then((data) => {
+	    // alert(data)
+	    setlocations(data)
+	    locSearchAndDisplay()
+	})
 })
 
 function distance(lat1, lng1, lat2, lng2) {
