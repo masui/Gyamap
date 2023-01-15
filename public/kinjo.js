@@ -21,7 +21,6 @@ $(function(){
     if(args['name']){
 	name = args['name']
     }
-    alert(name)
     fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
 	.then((response) => response.text())
 	.then((data) => {
