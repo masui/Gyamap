@@ -114,7 +114,7 @@ function showlists(){
 	map.append(img)
 	li.append(map)
 	*/
-	li.append(map)
+	li.append(img)
 	
 	$('#list').append(li)
     }
