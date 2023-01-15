@@ -11,7 +11,7 @@ var locations = [] // POIリスト
 var map // GoogleMapsオブジェクト
 
 $(function(){
-    alert("2")
+    alert("3")
     
     // URL引数の解析
     let args = {}
@@ -116,8 +116,8 @@ function showlists(){
 	    showlists()
 	})
 	img.hover(function(e){
-	    console.log($(e.target).attr('image'))
-	    $('#image').attr('src',$(e.target).attr('image'))
+	    console.log($(e.target).attr('photo'))
+	    $('#image').attr('src',$(e.target).attr('photo'))
 	})
 	/*
 	let map = $('<a>')
