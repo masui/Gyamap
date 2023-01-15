@@ -82,7 +82,7 @@ function showlists(){
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
-	e.attr('href',`https://scrapbox.io/${loc.project}/${loc.title}`)
+	e.attr('href',`https://scrapbox.io/Kinjo/${loc.title}`)
 	li.append(e)
 	li.append($('<span>').text(' '))
 	
