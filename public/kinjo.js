@@ -105,10 +105,12 @@ function showlists(){
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
+	img.latitude = 10000
 	img.click(function(e){
 	    console.log(e.type)
 	    console.log(e.target)
 	    console.log($(e.target).attr('latitude'))
+	    console.log(e.latitude)
 	    //alert($(e.target).attr('latitude'))
 	})
 	/*
