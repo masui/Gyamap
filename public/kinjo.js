@@ -107,14 +107,14 @@ function showlists(){
 	img.attr('zoom',loc.zoom)
 	img.latitude = 10000
 	img.click(function(e){
-	    //console.log(e.type)
-	    //console.log(e.target)
-	    //console.log($(e.target).attr('latitude'))
 	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
 
 	    curpos.latitude = $(e.target).attr('latitude')
 	    curpos.longitude = $(e.target).attr('longitude')
 	    showlists()
+	})
+	img.hoveer(function(e){
+	    $('#image').attr('src',$(e.target).attr('image'))
 	})
 	/*
 	let map = $('<a>')
