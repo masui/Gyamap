@@ -105,8 +105,9 @@ function showlists(){
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
-	img.on('click',function(e){
-	    console.log($(e.target))
+	img.click(function(e){
+	    console.log(e.type)
+	    console.log(e.target)
 	    //alert($(e.target).attr('latitude'))
 	})
 	/*
