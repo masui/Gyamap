@@ -116,6 +116,7 @@ function showlists(){
 	    showlists()
 	})
 	img.hover(function(e){
+	    console.log($(e.target).attr('image'))
 	    $('#image').attr('src',$(e.target).attr('image'))
 	})
 	/*
