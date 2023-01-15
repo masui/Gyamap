@@ -113,7 +113,7 @@ function showlists(){
 	    curpos.longitude = $(e.target).attr('longitude')
 	    showlists()
 	})
-	img.hoveer(function(e){
+	img.hover(function(e){
 	    $('#image').attr('src',$(e.target).attr('image'))
 	})
 	/*
