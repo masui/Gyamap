@@ -108,6 +108,7 @@ function showlists(){
 	img.click(function(e){
 	    console.log(e.type)
 	    console.log(e.target)
+	    console.log(e.target.attr('latitude'))
 	    //alert($(e.target).attr('latitude'))
 	})
 	/*
