@@ -3,9 +3,14 @@
 // 位置データはFirebase functionで取得
 //
 
-var curlatitude = null
-var curlongitude = null
+//var curlatitude = null
+//var curlongitude = null
+var curpos = {}
 var curzoom = 10
+
+var locations = [] // POIリスト
+    
+var map // GoogleMapsオブジェクト
 
 $(function(){
     // URL引数の解析
@@ -25,8 +30,7 @@ $(function(){
     fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
 	.then((response) => response.text())
 	.then((data) => {
-	    // alert(data)
-	    setlocations(data)
+	    locations = JSON.parse(data)
 	    locSearchAndDisplay()
 	})
 })
@@ -40,15 +44,10 @@ function distance(lat1, lng1, lat2, lng2) {
     return 6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2));
 }
 
-var locations = []
-function setlocations(data){
-    locations = JSON.parse(data)
-}
-    
 function locSearchAndDisplay(){
     var center = map.getCenter();
-    curlatitude = center.lat()
-    curlongitude = center.lng()
+    curpos.latitude = center.lat()
+    curpos.longitude = center.lng()
     showlists()
 }
 
@@ -70,7 +69,7 @@ function initGoogleMaps(lat,lng){
 function showlists(){
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
-	entry.distance = distance(entry.latitude,entry.longitude,curlatitude,curlongitude)
+	entry.distance = distance(entry.latitude,entry.longitude,curpos.latitude,curpos.longitude)
     }
     locations.sort((a, b) => { // 近い順にソート
 	return a.distance > b.distance ? 1 : -1;
@@ -102,9 +101,9 @@ function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
         position.coords.longitude;
-    curlatitude = position.coords.latitude
-    curlongitude = position.coords.longitude
-    initGoogleMaps(curlatitude,curlongitude)
+    curpos.latitude = position.coords.latitude
+    curpos.longitude = position.coords.longitude
+    initGoogleMaps(curpos.latitude,curpos.longitude)
     showlists()
 }
 function errorCallback(error) {
