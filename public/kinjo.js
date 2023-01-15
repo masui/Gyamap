@@ -23,10 +23,9 @@ $(function(){
     if(args['loc']){
 	var match = args['loc'].match(/[NS](.*)[EW](.*)Z(.*)/)
 	if(match){
-	    location.latitude = Number(match[1])
-	    location.longitude = Number(match[2])
-	    location.zoom = Number(match[3])
-	    alert(location.latitude)
+	    curpos.latitude = Number(match[1])
+	    curpos.longitude = Number(match[2])
+	    curpos.zoom = Number(match[3])
 	}
     }
 
@@ -104,7 +103,13 @@ function showlists(){
     }
 }
 
-navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+if(curpos.latitude){
+    initGoogleMaps(curpos.latitude,curpos.longitude)
+    showlists()
+}
+else {
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+}
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
         position.coords.latitude + "," +
