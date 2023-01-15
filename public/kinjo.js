@@ -114,7 +114,7 @@ function showlists(){
 
 	    curpos.latitude = $(e.target).attr('latitude')
 	    curpos.longitude = $(e.target).attr('longitude')
-	    showlist()
+	    showlists()
 	})
 	/*
 	let map = $('<a>')
