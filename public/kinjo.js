@@ -102,10 +102,20 @@ function showlists(){
 	let img = $('<img>')
 	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
 	img.attr('height','14px')
+	img.attr('latitude',loc.latitude)
+	img.attr('longitude',loc.longitude)
+	img.attr('zoom',loc.zoom)
+	img.on('click',function(){
+	    alert(img.attr('latitude'))
+	})
+	/*
 	let map = $('<a>')
 	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
 	map.append(img)
 	li.append(map)
+	*/
+	li.append(map)
+	
 	$('#list').append(li)
     }
 }
