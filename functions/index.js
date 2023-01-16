@@ -37,6 +37,7 @@ async function getlist(url,res){
     let lines = text.split(/\n/)
     let title = lines[0]
     let entry = {}
+    let desc = ""
     for(let i=1;i<lines.length;i++){
 	line = lines[i]
 	let match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
@@ -57,7 +58,9 @@ async function getlist(url,res){
 	    getlist(texturl(match[1]),null)
 	    continue
 	}
+	desc += line
     }
+    entry.desc = desc
     if(entry.latitude){
 	datalist.push(entry)
     }

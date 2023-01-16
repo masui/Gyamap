@@ -49,6 +49,7 @@ $(function(){
 	.then((response) => response.text())
 	.then((data) => {
 	    locations = JSON.parse(data)
+	    console.log(locations)
 	    locSearchAndDisplay()
 	})
 })
@@ -100,6 +101,7 @@ function showlists(){
     $('#list').empty()
     for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
+	console.log(loc)
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
@@ -131,13 +133,12 @@ function showlists(){
 	img.mouseleave(function(e){
 	    $('#image').attr('src',selectedimage)
 	})
-	/*
-	let map = $('<a>')
-	map.attr('href',`https://www.google.com/maps/@${loc.latitude},${loc.longitude},${loc.zoom}z`)
-	map.append(img)
-	li.append(map)
-	*/
 	li.append(img)
+
+	li.append($('<span>').text(' '))
+	let desc = $("<span>")
+	desc.text(loc.desc)
+	li.append(desc)
 	
 	$('#list').append(li)
     }
