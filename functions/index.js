@@ -41,9 +41,8 @@ async function getlist(url,res){
     for(let i=1;i<a.length;i++){
 	line = a[i]
 	match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
-	if(match){
-	    entry.photo = `${match[1]}.png`
-	    console.log(`photo = ${entry.photo}`)
+	if(match && !entry.photo){
+	    entry.photo = match[i]
 	}
 	else {
 	    match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合

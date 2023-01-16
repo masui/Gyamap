@@ -11,7 +11,7 @@ var locations = [] // POIリスト
 var map // GoogleMapsオブジェクト
 
 $(function(){
-    alert("4")
+    alert("16")
     
     // URL引数の解析
     let args = {}
@@ -107,6 +107,7 @@ function showlists(){
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
+	img.attr('photo',loc.photo)
 	img.latitude = 10000
 	img.click(function(e){
 	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
@@ -115,10 +116,22 @@ function showlists(){
 	    curpos.longitude = $(e.target).attr('longitude')
 	    showlists()
 	})
-	img.hover(function(e){
-	    alert($(e.target))
-	    console.log($(e.target).attr('photo'))
-	    $('#image').attr('src',$(e.target).attr('photo'))
+	img.mouseover(function(e){
+	    //console.log($(e.attr('photo')))
+	    //*** console.log($(e.target).attr('photo'))
+	    //console.log($(e.target))
+	    //console.log($(e.target).attr('photo'))
+
+	    let pngurl = `${$(e.target).attr('photo')}.png`
+	    let jpegurl = `${$(e.target).attr('photo')}.jpg`
+	    let jpegimg = new Image();
+	    jpegimg.src = jpegurl
+	    jpegimg.onload = function () {
+		$('#image').attr('src',jpegurl)
+	    }
+	    jpegimg.onerror = function () {
+		$('#image').attr('src',pngurl)
+	    }
 	})
 	/*
 	let map = $('<a>')
