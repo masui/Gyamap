@@ -117,25 +117,7 @@ function showlists(){
 	    showlists()
 	})
 	img.mouseover(function(e){
-	    //console.log($(e.attr('photo')))
-	    //*** console.log($(e.target).attr('photo'))
-	    //console.log($(e.target))
-	    //console.log($(e.target).attr('photo'))
-
-	    let pngurl = `${$(e.target).attr('photo')}.png`
-	    let jpegurl = `${$(e.target).attr('photo')}.jpg`
-	    let rawurl = `${$(e.target).attr('photo')}/raw`
-	    $('#image').attr('src',rawurl)
-	    /*
-	    let jpegimg = new Image();
-	    jpegimg.src = jpegurl
-	    jpegimg.onload = function () {
-		$('#image').attr('src',jpegurl)
-	    }
-	    jpegimg.onerror = function () {
-		$('#image').attr('src',pngurl)
-	    }
-	    */
+	    $('#image').attr('src',`${$(e.target).attr('photo')}/raw`)
 	})
 	/*
 	let map = $('<a>')
