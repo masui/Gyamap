@@ -108,7 +108,8 @@ function showlists(){
 	li.append($('<span>').text(' '))
 	
 	let img = $('<img>')
-	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
+	//img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
+	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/b/c/bc0c849e6707a5b4f71a4a5ad801f5ea.png')
 	img.attr('height','14px')
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
