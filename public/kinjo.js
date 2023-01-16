@@ -124,6 +124,9 @@ function showlists(){
 
 	    let pngurl = `${$(e.target).attr('photo')}.png`
 	    let jpegurl = `${$(e.target).attr('photo')}.jpg`
+	    let rawurl = `${$(e.target).attr('photo')}/raw`
+	    $('#image').attr('src',rawurl)
+	    /*
 	    let jpegimg = new Image();
 	    jpegimg.src = jpegurl
 	    jpegimg.onload = function () {
@@ -132,6 +135,7 @@ function showlists(){
 	    jpegimg.onerror = function () {
 		$('#image').attr('src',pngurl)
 	    }
+	    */
 	})
 	/*
 	let map = $('<a>')
