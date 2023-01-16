@@ -106,6 +106,7 @@ function showlists(){
 	let e = $('<a>')
 	e.text(loc.title)
 	e.attr('href',`https://scrapbox.io/Kinjo/${loc.title}`)
+	e.attr('target','_blank')
 	li.append(e)
 	li.append($('<span>').text(' '))
 	
