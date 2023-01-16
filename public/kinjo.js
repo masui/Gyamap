@@ -63,6 +63,7 @@ function distance(lat1, lng1, lat2, lng2) {
 }
 
 function locSearchAndDisplay(){
+    $('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
     var center = map.getCenter();
     curpos.latitude = center.lat()
     curpos.longitude = center.lng()
@@ -79,7 +80,10 @@ function initGoogleMaps(lat,lng){
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
-    google.maps.event.addListener(map, 'dragend', locSearchAndDisplay);
+    google.maps.event.addListener(map, 'dragend', function(){
+    	$('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
+	locSearchAndDisplay()
+    })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 }
