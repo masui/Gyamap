@@ -54,8 +54,8 @@ async function getlist(url,res){
 		entry.longitude = Number(match[3])
 		entry.zoom = Number(match[4])
 	    }
-	    else {
-		match = line.match(/\[([\w\s]+)\]/)
+  	    else {
+	        match = line.match(/\[([^\[\]]*)\]/)
 		if(match){
 		    getlist(texturl(match[1]),null)
 		}

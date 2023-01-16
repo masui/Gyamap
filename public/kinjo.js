@@ -116,6 +116,7 @@ function showlists(){
 	    showlists()
 	})
 	img.hover(function(e){
+	    alert($(e.target))
 	    console.log($(e.target).attr('photo'))
 	    $('#image').attr('src',$(e.target).attr('photo'))
 	})
