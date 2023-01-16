@@ -43,22 +43,21 @@ async function getlist(url,res){
 	match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
 	if(match && !entry.photo){
 	    entry.photo = match[i]
+	    break
 	}
-	else {
-	    match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
-	    if(match){
-		// entry.project = 'Kinjo'
-		entry.title = title
-		entry.latitude = Number(match[2]) // 西経の処理が必要!!
-		entry.longitude = Number(match[3])
-		entry.zoom = Number(match[4])
-	    }
-  	    else {
-	        match = line.match(/\[([^\[\]]*)\]/)
-		if(match){
-		    getlist(texturl(match[1]),null)
-		}
-	    }
+	match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
+	if(match){
+	    // entry.project = 'Kinjo'
+	    entry.title = title
+	    entry.latitude = Number(match[2]) // 西経の処理が必要!!
+	    entry.longitude = Number(match[3])
+	    entry.zoom = Number(match[4])
+	    break
+	}
+	match = line.match(/\[([^\[\]]*)\]/)
+	if(match){
+	    getlist(texturl(match[1]),null)
+	    break
 	}
     }
     if(entry.latitude){
