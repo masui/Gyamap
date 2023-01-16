@@ -10,6 +10,8 @@ var locations = [] // POIリスト
     
 var map // GoogleMapsオブジェクト
 
+var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白
+
 $(function(){
     //alert("16")
     
@@ -111,12 +113,18 @@ function showlists(){
 	img.click(function(e){
 	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
 
+	    selectedimage = `${$(e.target).attr('photo')}/raw`
+	    $('#image').attr('src',selectedimage)
+	    
 	    curpos.latitude = $(e.target).attr('latitude')
 	    curpos.longitude = $(e.target).attr('longitude')
 	    showlists()
 	})
 	img.mouseover(function(e){
 	    $('#image').attr('src',`${$(e.target).attr('photo')}/raw`)
+	})
+	img.mouseleave(function(e){
+	    $('#image').attr('src',selectedimage)
 	})
 	/*
 	let map = $('<a>')
