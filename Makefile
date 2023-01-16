@@ -1,4 +1,6 @@
 deploy:
 	firebase deploy
 local:
-	firebase emulators:start
+	firebase serve
+
+#firebase emulators:start

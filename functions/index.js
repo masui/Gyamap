@@ -1,5 +1,5 @@
 //
-// [/kinjo]のデータをリストするFirebase function
+// /kinjo のデータをリストするFirebase function
 //
 
 const functions = require("firebase-functions");
@@ -34,30 +34,28 @@ async function getlist(url,res){
     pending += 1
     var response = await fetch(url)
     var text = await(response.text())
-    let a = text.split(/\n/)
-    let title = a[0]
+    let lines = text.split(/\n/)
+    let title = lines[0]
     let entry = {}
-    let match
-    for(let i=1;i<a.length;i++){
-	line = a[i]
-	match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
+    for(let i=1;i<lines.length;i++){
+	line = lines[i]
+	let match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
 	if(match && !entry.photo){
 	    entry.photo = match[i]
-	    break
+	    continue
 	}
 	match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
 	if(match){
-	    // entry.project = 'Kinjo'
 	    entry.title = title
 	    entry.latitude = Number(match[2]) // 西経の処理が必要!!
 	    entry.longitude = Number(match[3])
 	    entry.zoom = Number(match[4])
-	    break
+	    continue
 	}
 	match = line.match(/\[([^\[\]]*)\]/)
 	if(match){
 	    getlist(texturl(match[1]),null)
-	    break
+	    continue
 	}
     }
     if(entry.latitude){
@@ -68,22 +66,12 @@ async function getlist(url,res){
     if(res){
 	wait_res = res
 	wait_pending()
-	//res.set('Access-Control-Allow-Origin', '*')
-	//res.json(datalist)
     }
 }
     
 exports.POI = functions.https.onRequest((request, response) => {
     datalist = []
 
-    rooturl = texturl(request.query.name)
+    rooturl = texturl(request.query.name) // URL?name=abc からabcを取得
     getlist(rooturl,response)
-
-    /*
-    // CORSを許す
-    response.set('Access-Control-Allow-Origin', '*')
-    // JSONデータをブラウザに返す
-    datalist = [1,2,3]
-    response.json(datalist)
-    */
 })

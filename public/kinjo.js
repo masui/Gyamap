@@ -108,7 +108,6 @@ function showlists(){
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
 	img.attr('photo',loc.photo)
-	img.latitude = 10000
 	img.click(function(e){
 	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
 
