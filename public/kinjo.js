@@ -11,7 +11,7 @@ var locations = [] // POIリスト
 var map // GoogleMapsオブジェクト
 
 $(function(){
-    alert("3")
+    alert("4")
     
     // URL引数の解析
     let args = {}
