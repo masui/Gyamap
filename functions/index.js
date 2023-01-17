@@ -98,10 +98,3 @@ async function getlist(url,res){
 	wait_pending()
     }
 }
-    
-exports.POI = functions.https.onRequest((request, response) => {
-    datalist = []
-
-    rooturl = texturl(request.query.name) // URL?name=abc からabcを取得
-    getlist(rooturl,response)
-})
