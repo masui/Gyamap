@@ -45,7 +45,15 @@ $(function(){
     if(args['name']){
 	name = args['name']
     }
-    fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
+    else {
+	let match = location.href.match(/\/([^\/]+)$/)
+	if(match){
+	    name = match[1]
+	}
+    }
+    // fetch(`http://localhost:5001/masui-kinjo-95209/us-central1/POI?name=${name}`)
+    // fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
+    fetch(`/info/${name}`)
 	.then((response) => response.text())
 	.then((data) => {
 	    locations = JSON.parse(data)

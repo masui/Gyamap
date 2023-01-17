@@ -4,6 +4,56 @@
 
 const functions = require("firebase-functions");
 //const fetch = require('node-fetch');
+const express = require('express');
+
+const app = express(); // expressを利用! firebase.jsonの設定が大事
+
+//app.engine('hbs', engines.handlebars);
+//app.set('views', './views');
+//app.set('view engine', 'hbs');
+
+app.set('views', './views');
+app.set('view engine', 'ejs');
+
+
+app.get('/info/*', (request, response) => { // Gyamap.com/info/ツマガリ みたいなアクセス
+    datalist = []
+    rooturl = texturl(request.params[0])
+    getlist(rooturl,response)
+    // response.send(request.params);
+})
+app.get('/*', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
+    // response.send(request.params[0] + "xxxxx")
+    response.render('index');
+})
+
+// exports.app = functions.https.onRequest((req, res) => {
+
+//exports.app = functions.https.onRequest((app) => {
+//    app.get('/api', (request, response) => {
+//	response.send("API");
+//    })
+//    /*
+//    app.get('/*', (request, response) => {
+//	response.send(request.params[0] + "xxxxx")
+//    })
+//    */
+//});
+
+exports.app = functions.https.onRequest(app);
+
+//exports.app = functions.https.onRequest((req, res) => {
+//    //console.log(req.url)
+//    var param = req.params[0]
+//    res.send(param)
+//
+//    /*
+//    datalist = []
+//    //rooturl = texturl(request.query.name) // URL?name=abc からabcを取得
+//    rooturl = texturl(param)
+//    getlist(rooturl,res)
+//    */
+//})
 
 var visited_pages = {} // 同じページを再訪しないように
 
@@ -53,12 +103,16 @@ async function getlist(url,res){
 	    entry.zoom = Number(match[4])
 	    continue
 	}
+	if(!line.match(/^\s*$/) && desc == ""){
+	    if(!line.match(/\[http/)){
+		desc = line.replace(/\[/g,'').replace(/\]/g,'')
+	    }
+	}
 	match = line.match(/\[([^\[\]]*)\]/)
 	if(match){
 	    getlist(texturl(match[1]),null)
 	    continue
 	}
-	desc += line
     }
     entry.desc = desc
     if(entry.latitude){
