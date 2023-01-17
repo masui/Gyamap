@@ -10,11 +10,9 @@ var locations = [] // POIリスト
     
 var map // GoogleMapsオブジェクト
 
-var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白
+var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
 
 $(function(){
-    //alert("16")
-    
     // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
@@ -40,19 +38,18 @@ $(function(){
 	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     }
 
-    // [/Kinjo] からデータ取得
+    // [/Gyamap] からデータ取得
     let name = '増井俊之'
     if(args['name']){
 	name = args['name']
     }
-    else {
+    else { // Gyamap.com/逗子八景 みたいなURL
 	let match = location.href.match(/\/([^\/]+)$/)
 	if(match){
 	    name = match[1]
 	}
     }
-    // fetch(`http://localhost:5001/masui-kinjo-95209/us-central1/POI?name=${name}`)
-    // fetch(`https://us-central1-masui-kinjo-95209.cloudfunctions.net/POI?name=${name}`)
+
     fetch(`/info/${name}`)
 	.then((response) => response.text())
 	.then((data) => {
@@ -113,13 +110,12 @@ function showlists(){
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
-	e.attr('href',`https://scrapbox.io/Kinjo/${loc.title}`)
+	e.attr('href',`https://scrapbox.io/Gyamap/${loc.title}`)
 	e.attr('target','_blank')
 	li.append(e)
 	li.append($('<span>').text(' '))
 	
 	let img = $('<img>')
-	//img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/8/0/802bd7347668cae0bafec4f5d52e247d.png')
 	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/b/c/bc0c849e6707a5b4f71a4a5ad801f5ea.png')
 	img.attr('height','14px')
 	img.attr('latitude',loc.latitude)

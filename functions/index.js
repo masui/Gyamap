@@ -1,64 +1,37 @@
 //
-// /kinjo のデータをリストするFirebase function
+// /Gyamap のデータをリストするFirebase function
 //
 
 const functions = require("firebase-functions");
 //const fetch = require('node-fetch');
+
+
+// Firebaseでexpressを利用
 const express = require('express');
-
 const app = express(); // expressを利用! firebase.jsonの設定が大事
-
-//app.engine('hbs', engines.handlebars);
-//app.set('views', './views');
-//app.set('view engine', 'hbs');
 
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-
+// Gyamap.com/info/場所
 app.get('/info/*', (request, response) => { // Gyamap.com/info/ツマガリ みたいなアクセス
     datalist = []
     rooturl = texturl(request.params[0])
     getlist(rooturl,response)
-    // response.send(request.params);
 })
+// Gyamap.com/名前
 app.get('/*', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
-    // response.send(request.params[0] + "xxxxx")
     response.render('index');
 })
 
-// exports.app = functions.https.onRequest((req, res) => {
-
-//exports.app = functions.https.onRequest((app) => {
-//    app.get('/api', (request, response) => {
-//	response.send("API");
-//    })
-//    /*
-//    app.get('/*', (request, response) => {
-//	response.send(request.params[0] + "xxxxx")
-//    })
-//    */
-//});
-
 exports.app = functions.https.onRequest(app);
 
-//exports.app = functions.https.onRequest((req, res) => {
-//    //console.log(req.url)
-//    var param = req.params[0]
-//    res.send(param)
-//
-//    /*
-//    datalist = []
-//    //rooturl = texturl(request.query.name) // URL?name=abc からabcを取得
-//    rooturl = texturl(param)
-//    getlist(rooturl,res)
-//    */
-//})
+
 
 var visited_pages = {} // 同じページを再訪しないように
 
 function texturl(pagetitle){
-    return `https://scrapbox.io/api/pages/Kinjo/${pagetitle}/text`
+    return `https://scrapbox.io/api/pages/Gyamap/${pagetitle}/text`
 }
 
 var datalist = [] // ブラウザに返すデータ
