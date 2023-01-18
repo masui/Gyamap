@@ -16,10 +16,24 @@
       a:link { color: #0000f0 ; }
       a:visited { color: #0000f0 ; }
       a { text-decoration: none; }
+      span.title {
+	  font-size: large;
+	  font-weight: bold;
+      }
+      span.tab {
+	  font-weight: bold;
+      }
     </style>
     
-    <!-- <h2>Gyamap: <%= loc %>の近くの気になる場所や店を表示</h2> -->
-    <h2>「<a href="https://Scrapbox.io/Gyamap/<%= desc %>" target="_blank"><%= desc %></a>」関連の地図を表示</h2>
+    <!-- <h2>「<a href="https://Scrapbox.io/Gyamap/<%= desc %>" target="_blank"><%= desc %></a>」関連の地図を表示</h2> -->
+
+    <span class='title'>「<a href="https://Scrapbox.io/Gyamap/<%= desc %>" target="_blank"><%= desc %></a>」関連の地図を表示</span>
+    <span>　</span>
+    <span class='tab'><a href="https://scrapbox.io/Gyamap/概要" target='_blank'>Gyamapとは</a></span>
+    <span>　</span>
+    <span class='tab'><a href="https://scrapbox.io/Gyamap/Issues" target='_blank'>Issues</a></span>
+
+    <p></p>
 
     <div style="display: flex; flex-flow: row wrap;">
       <div id="map_canvas" style="width:400px;height:400px;padding=10px;"></div>
@@ -28,7 +42,5 @@
 
     <ul id="list"></ul>
 
-    <h2><a href="https://scrapbox.io/Gyamap/概要" target='_blank'>概要</a></h2>
-    <h2><a href="https://scrapbox.io/Gyamap/Issues" target='_blank'>Issues</a></h2>
   </body>
 </html>

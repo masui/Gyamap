@@ -25,7 +25,6 @@ $(function(){
     })
 
     if(args['loc']){
-	alert('args[loc] detected')
 	var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
 	if(match){
 	    curpos.latitude = Number(match[1])
@@ -58,7 +57,7 @@ $(function(){
 	.then((data) => {
 	    locations = JSON.parse(data)
 	    console.log(locations)
-	    //locSearchAndDisplay()
+	    locSearchAndDisplay() ///////
 	})
 })
 
@@ -126,7 +125,8 @@ function initGoogleMaps(lat,lng){
 }
 
 function showlists(){
-    //alert('showlists()')
+    // alert('showlists()')
+    // console.log(locations)
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curpos.latitude,curpos.longitude)
@@ -138,6 +138,7 @@ function showlists(){
     $('#list').empty()
     for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
+	//console.log(loc)
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
@@ -179,7 +180,7 @@ function showlists(){
 	let desc = $("<span>")
 	desc.text(loc.desc)
 	li.append(desc)
-	
+
 	$('#list').append(li)
     }
 }
