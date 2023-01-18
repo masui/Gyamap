@@ -19,9 +19,14 @@ app.get('/info/*', (request, response) => { // Gyamap.com/info/ツマガリ み�
     rooturl = texturl(request.params[0])
     getlist(rooturl,response)
 })
+
+let data = {
+    loc: "現在地"
+}
+
 // Gyamap.com/名前
 app.get('/*', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
-    response.render('index');
+    response.render('index',data)  // views/index.ejs を表示
 })
 
 exports.app = functions.https.onRequest(app);
@@ -50,11 +55,13 @@ function wait_pending(){
 }
 
 async function getlist(url,res){
+    console.log(`getlist(${url})`)
     if(visited_pages[url]) return
     visited_pages[url] = true
 
     // Scrapboxデータを取得
     pending += 1
+    console.log(`pending +1 pending=${pending}`)
     var response = await fetch(url)
     var text = await(response.text())
     let lines = text.split(/\n/)
@@ -92,6 +99,7 @@ async function getlist(url,res){
 	datalist.push(entry)
     }
     pending -= 1
+    console.log(`pending -1 pending=${pending}`)
 
     if(res){
 	wait_res = res
