@@ -26,12 +26,26 @@ let data = {
 
 // Gyamap.com/名前
 app.get('/*', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
+    data.desc = request.params[0]
+    if(data.desc == "") data.desc = "Gyamap"
     response.render('index',data)  // views/index.ejs を表示
 })
 
-exports.app = functions.https.onRequest(app);
-
-
+exports.app = functions.https.onRequest(app)
+/*
+exports.app = functions
+    .runWith({
+      // Ensure the function has enough memory and time
+      // to process large files
+      timeoutSeconds: 300,
+      memory: "1GB",
+    })
+    .storage.object()
+    .onFinalize((object) => {
+      // Do some complicated things that take a lot of memory and time
+    })
+    .https.onRequest(app)
+*/
 
 var visited_pages = {} // 同じページを再訪しないように
 

@@ -6,6 +6,8 @@
 var curpos = {}
 var curzoom = 10
 
+//var center = {}
+
 var locations = [] // POIリスト
     
 var map // GoogleMapsオブジェクト
@@ -23,6 +25,7 @@ $(function(){
     })
 
     if(args['loc']){
+	alert('args[loc] detected')
 	var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
 	if(match){
 	    curpos.latitude = Number(match[1])
@@ -39,7 +42,7 @@ $(function(){
     }
 
     // [/Gyamap] からデータ取得
-    let name = '増井俊之'
+    let name = 'Gyamap'
     if(args['name']){
 	name = args['name']
     }
@@ -55,7 +58,7 @@ $(function(){
 	.then((data) => {
 	    locations = JSON.parse(data)
 	    console.log(locations)
-	    locSearchAndDisplay()
+	    //locSearchAndDisplay()
 	})
 })
 
@@ -68,11 +71,39 @@ function distance(lat1, lng1, lat2, lng2) {
     return 6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2));
 }
 
+// 方位角
+function angle(lat1, lng1, lat2, lng2){
+    const R = Math.PI / 180;
+    lat1 *= R
+    lng1 *= R
+    lat2 *= R
+    lng2 *= R
+    let deltax = lng2 - lng1
+    let y = Math.sin(deltax)
+    let x = Math.cos(lat1) * Math.tan(lat2) - Math.sin(lat1) * Math.cos(deltax)
+    let psi = Math.atan2(y, x) * 180 / Math.PI
+    if(psi < 0) psi += 360
+    return psi
+}
+
+function dir(angle){
+    if(angle < 22.5) return 'N'
+    if(angle < 67.5) return 'NE'
+    if(angle < 112.5) return 'E'
+    if(angle < 157.5) return 'SE'
+    if(angle < 202.5) return 'S'
+    if(angle < 247.5) return 'SW'
+    if(angle < 292.5) return 'W'
+    if(angle < 337.5) return 'NW'
+    return 'N'
+}
+
 function locSearchAndDisplay(){
+    //alert('locSearchAndDisp')
     $('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
-    var center = map.getCenter();
-    curpos.latitude = center.lat()
-    curpos.longitude = center.lng()
+    let mapcenter = map.getCenter();
+    curpos.latitude = mapcenter.lat()
+    curpos.longitude = mapcenter.lng()
     showlists()
 }
 
@@ -95,6 +126,7 @@ function initGoogleMaps(lat,lng){
 }
 
 function showlists(){
+    //alert('showlists()')
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
 	entry.distance = distance(entry.latitude,entry.longitude,curpos.latitude,curpos.longitude)
@@ -106,7 +138,6 @@ function showlists(){
     $('#list').empty()
     for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
-	console.log(loc)
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
@@ -116,7 +147,11 @@ function showlists(){
 	li.append($('<span>').text(' '))
 	
 	let img = $('<img>')
-	img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/b/c/bc0c849e6707a5b4f71a4a5ad801f5ea.png')
+	/// img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/b/c/bc0c849e6707a5b4f71a4a5ad801f5ea.png')
+	//img.attr('src','https://gyazo.com/f96e111e39eb866e4e323630edd1cf04/raw')
+
+	let d = dir(angle(curpos.latitude,curpos.longitude,loc.latitude,loc.longitude))
+	img.attr('src',`move_${d}.png`)
 	img.attr('height','14px')
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
