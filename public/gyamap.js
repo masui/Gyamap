@@ -14,6 +14,8 @@ var map // GoogleMapsオブジェクト
 
 var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
 
+var clicked = false
+
 $(function(){
     // URL引数の解析
     let args = {}
@@ -118,6 +120,7 @@ function initGoogleMaps(lat,lng){
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', function(){
     	$('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
+	clicked = false
 	locSearchAndDisplay()
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
@@ -166,6 +169,7 @@ function showlists(){
 	    
 	    curpos.latitude = $(e.target).attr('latitude')
 	    curpos.longitude = $(e.target).attr('longitude')
+	    clicked = true
 	    showlists()
 	})
 	img.mouseover(function(e){
@@ -174,7 +178,9 @@ function showlists(){
 	img.mouseleave(function(e){
 	    $('#image').attr('src',selectedimage)
 	})
-	li.append(img)
+	if(!clicked || i != 0){
+	    li.append(img)
+	}
 
 	li.append($('<span>').text(' '))
 	let desc = $("<span>")
