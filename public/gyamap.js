@@ -151,12 +151,9 @@ function showlists(){
 	li.append($('<span>').text(' '))
 	
 	let img = $('<img>')
-	/// img.attr('src','https://s3-ap-northeast-1.amazonaws.com/masui.org/b/c/bc0c849e6707a5b4f71a4a5ad801f5ea.png')
-	//img.attr('src','https://gyazo.com/f96e111e39eb866e4e323630edd1cf04/raw')
-
 	let d = dir(angle(curpos.latitude,curpos.longitude,loc.latitude,loc.longitude))
 	img.attr('src',`move_${d}.png`)
-	img.attr('height','14px')
+	img.attr('height','15px')
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
 	img.attr('zoom',loc.zoom)
