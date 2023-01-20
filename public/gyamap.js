@@ -39,22 +39,23 @@ $(function(){
 	showlists()
     }
     else {
+	console.log("getCurrentPosition()")
 	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     }
 
     // [/Gyamap] からデータ取得
-    let name = 'Gyamap'
-    if(args['name']){
-	name = args['name']
+    let title = 'Gyamap'
+    if(args['title']){
+	title = args['title']
     }
     else { // Gyamap.com/逗子八景 みたいなURL
 	let match = location.href.match(/\/([^\/]+)$/)
 	if(match){
-	    name = match[1]
+	    title = match[1]
 	}
     }
 
-    fetch(`/info/${name}`)
+    fetch(`/${project}/info/${title}`)
 	.then((response) => response.text())
 	.then((data) => {
 	    locations = JSON.parse(data)
@@ -109,6 +110,7 @@ function locSearchAndDisplay(){
 }
 
 function initGoogleMaps(lat,lng){
+    console.log("initGoogleMaps()")
     var latlng = new google.maps.LatLng(lat,lng)
     var myOptions = {
       zoom: 14,
@@ -116,6 +118,7 @@ function initGoogleMaps(lat,lng){
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    console.log("map generated")
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', function(){
@@ -129,9 +132,10 @@ function initGoogleMaps(lat,lng){
 
 function showlists(){
     // alert('showlists()')
-    // console.log(locations)
+    console.log('showlists()')
     for(var i=0;i<locations.length;i++){
 	entry = locations[i]
+	console.log(entry.title)
 	entry.distance = distance(entry.latitude,entry.longitude,curpos.latitude,curpos.longitude)
     }
     locations.sort((a, b) => { // 近い順にソート
@@ -145,14 +149,15 @@ function showlists(){
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
-	e.attr('href',`https://scrapbox.io/Gyamap/${loc.title}`)
+	e.attr('href',`https://scrapbox.io/${project}/${loc.title}`)
 	e.attr('target','_blank')
 	li.append(e)
 	li.append($('<span>').text(' '))
 	
 	let img = $('<img>')
 	let d = dir(angle(curpos.latitude,curpos.longitude,loc.latitude,loc.longitude))
-	img.attr('src',`move_${d}.png`)
+	//img.attr('src',`https://Gyamap.com/move_${d}.png`)
+	img.attr('src',`/move_${d}.png`)
 	img.attr('height','15px')
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
@@ -185,8 +190,8 @@ function showlists(){
 	li.append(desc)
 
 	$('#list').append(li)
-    }
-}
+    }}
+    
 
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +

@@ -10,24 +10,57 @@ const functions = require("firebase-functions");
 const express = require('express');
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
+var project;
+
+// 静的ファイルはこれで提供
+app.use(express.static('public'));
+
+// views/index.ejs を使う
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-// Gyamap.com/info/場所
-app.get('/info/*', (request, response) => { // Gyamap.com/info/ツマガリ みたいなアクセス
+let data = {
+    loc: "現在地",
+    project: "Gyamap",
+    title: "Gyamap"
+}
+
+// Gyamap.com/プロジェクト/info/場所
+app.get('/:project/info/:title', (request, response) => { // Gyamap.com/info/ツマガリ みたいなアクセス
     datalist = []
-    rooturl = texturl(request.params[0])
+    project = request.params.project
+    rooturl = texturl(project,request.params.title)
     getlist(rooturl,response)
 })
 
-let data = {
-    loc: "現在地"
-}
+// Gyamap.com/info/場所
+app.get('/info/:title', (request, response) => { // Gyamap.com/info/ツマガリ みたいなアクセス
+    datalist = []
+    project = 'Gyamap'
+    rooturl = texturl(project,request.params.title)
+    getlist(rooturl,response)
+})
+
+//app.get('/*/favicon.ico', (request, response) => {
+//    response.sendFile(__dirname + '/../public/favicon.ico');
+//})
+//app.get('/*/gyamap.js', (request, response) => {
+//    response.sendFile(__dirname + '/../public/favicon.ico');
+//})
+    
+app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 みたいなアクセス
+    console.log(request.params)
+    data.project = request.params.project
+    console.log(`--------data.project=${data.project}`)
+    data.title = request.params.title
+    response.render('index',data)  // views/index.ejs を表示
+})
 
 // Gyamap.com/名前
-app.get('/*', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
-    data.desc = request.params[0]
-    if(data.desc == "") data.desc = "Gyamap"
+app.get('/:title', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
+    data.project = "Gyamap"
+    data.desc = request.params.title
+    // if(data.desc == "") data.desc = "Gyamap"
     response.render('index',data)  // views/index.ejs を表示
 })
 
@@ -49,8 +82,8 @@ exports.app = functions
 
 var visited_pages = {} // 同じページを再訪しないように
 
-function texturl(pagetitle){
-    return `https://scrapbox.io/api/pages/Gyamap/${pagetitle}/text`
+function texturl(project,title){
+    return `https://scrapbox.io/api/pages/${project}/${title}/text`
 }
 
 var datalist = [] // ブラウザに返すデータ
@@ -104,7 +137,7 @@ async function getlist(url,res){
 	}
 	match = line.match(/\[([^\[\]]*)\]/)
 	if(match){
-	    getlist(texturl(match[1]),null)
+	    getlist(texturl(project,match[1]),null)
 	    continue
 	}
     }

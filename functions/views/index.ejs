@@ -2,10 +2,13 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="icon" href="favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBWKRUvZyPd4hVwby3YVN9g2177B9peTEA&sensor=false"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="gyamap.js"></script>
+    <script>
+      var project = "<%= project %>"
+    </script>
+    <script src="/gyamap.js"></script>
     
     <style type="text/css">
       body {
@@ -26,9 +29,7 @@
       }
     </style>
     
-    <!-- <h2>「<a href="https://Scrapbox.io/Gyamap/<%= desc %>" target="_blank"><%= desc %></a>」関連の地図を表示</h2> -->
-
-    <span class='title'>「<a href="https://Scrapbox.io/Gyamap/<%= desc %>" target="_blank"><%= desc %></a>」関連の地図を表示</span>
+    <span class='title'>「<a href="https://Scrapbox.io/<%= project %>/<%= title %>" target="_blank"><%= title %></a>」関連の地図を表示</span>
     <span>　</span>
     <span class='tab'><a href="https://scrapbox.io/Gyamap/概要" target='_blank'>Gyamapとは</a></span>
     <span>　</span>
