@@ -59,7 +59,7 @@ app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 
 // Gyamap.com/名前
 app.get('/:title', (request, response) => { // Gyamap.com/逗子八景 みたいなアクセス
     data.project = "Gyamap"
-    data.desc = request.params.title
+    data.title = request.params.title
     // if(data.desc == "") data.desc = "Gyamap"
     response.render('index',data)  // views/index.ejs を表示
 })

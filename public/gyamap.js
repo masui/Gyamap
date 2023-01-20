@@ -156,8 +156,8 @@ function showlists(){
 	
 	let img = $('<img>')
 	let d = dir(angle(curpos.latitude,curpos.longitude,loc.latitude,loc.longitude))
-	//img.attr('src',`https://Gyamap.com/move_${d}.png`)
-	img.attr('src',`/move_${d}.png`)
+	img.attr('src',`https://Gyamap.com/move_${d}.png`)
+	//img.attr('src',`/move_${d}.png`)
 	img.attr('height','15px')
 	img.attr('latitude',loc.latitude)
 	img.attr('longitude',loc.longitude)
