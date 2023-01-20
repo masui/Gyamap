@@ -15,6 +15,7 @@ var map // GoogleMapsオブジェクト
 var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
 
 var clicked = false
+var clicktime
 
 $(function(){
     console.log('function()')
@@ -171,6 +172,7 @@ function showlists(){
 	img.attr('zoom',loc.zoom)
 	img.attr('photo',loc.photo)
 	img.click(function(e){
+	    clicktime = Date.now()
 	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
 
 	    selectedimage = `${$(e.target).attr('photo')}/raw`
@@ -182,7 +184,9 @@ function showlists(){
 	    showlists()
 	})
 	img.mouseover(function(e){
-	    $('#image').attr('src',`${$(e.target).attr('photo')}/raw`)
+	    if(Date.now() - clicktime > 500){ // クリック後すぐのmouseoverは無視
+		$('#image').attr('src',`${$(e.target).attr('photo')}/raw`)
+	    }
 	})
 	img.mouseleave(function(e){
 	    $('#image').attr('src',selectedimage)
