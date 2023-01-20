@@ -49,9 +49,7 @@ app.get('/info/:title', (request, response) => { // Gyamap.com/info/ツマガリ
 //})
     
 app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 みたいなアクセス
-    console.log(request.params)
     data.project = request.params.project
-    console.log(`--------data.project=${data.project}`)
     data.title = request.params.title
     response.render('index',data)  // views/index.ejs を表示
 })
@@ -102,7 +100,6 @@ function wait_pending(){
 }
 
 async function getlist(url,res){
-    console.log(`getlist(${url})`)
     if(visited_pages[url]) return
     visited_pages[url] = true
 

@@ -17,6 +17,8 @@ var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' /
 var clicked = false
 
 $(function(){
+    console.log('function()')
+    
     // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
@@ -55,9 +57,13 @@ $(function(){
 	}
     }
 
+    console.log(`project = ${project}`)
+
     fetch(`/${project}/info/${title}`)
 	.then((response) => response.text())
 	.then((data) => {
+	    console.log(`fetch /${project}/info/${title}`)
+	    console.log(`fetch => data=${data}`)
 	    locations = JSON.parse(data)
 	    console.log(locations)
 	    locSearchAndDisplay() ///////
@@ -141,11 +147,12 @@ function showlists(){
     locations.sort((a, b) => { // 近い順にソート
 	return a.distance > b.distance ? 1 : -1;
     });
+    console.log(`locations = ${locations}`)
 
     $('#list').empty()
     for(var i=0;i<10 && i<locations.length;i++){
 	let loc = locations[i]
-	//console.log(loc)
+	console.log(loc)
 	let li = $('<li>')
 	let e = $('<a>')
 	e.text(loc.title)
