@@ -3,77 +3,77 @@
 // 位置データはFirebase functionで取得
 //
 
-var curpos = {}
+var curpos = {} // 地図の中心座標
 var curzoom = 10
 
-//var center = {}
-
 var locations = [] // POIリスト
-    
+
 var map // GoogleMapsオブジェクト
 
-var selectedimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
+const blankimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
+var selectedimage = blankimage
 
 var clicked = false
 var clicktime
 
-$(function(){
+$(function () {
     console.log('function()')
-    
+
     // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
-        if(s != ''){
+        if (s != '') {
             let [name, value] = s.split('=')
             args[name] = decodeURIComponent(value)
         }
     })
 
-    if(args['loc']){
-	var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
-	if(match){
-	    curpos.latitude = Number(match[1])
-	    curpos.longitude = Number(match[2])
-	    curpos.zoom = Number(match[3])
-	}
+    if (args['loc']) {
+        var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
+        if (match) {
+            curpos.latitude = Number(match[1])
+            curpos.longitude = Number(match[2])
+            curpos.zoom = Number(match[3])
+        }
     }
-    if(curpos.latitude){
-	initGoogleMaps(curpos.latitude,curpos.longitude)
-	showlists()
+    if (curpos.latitude) {
+        initGoogleMaps(curpos.latitude, curpos.longitude)
+        showlists()
     }
     else {
-	console.log("getCurrentPosition()")
-	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        console.log("getCurrentPosition()")
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     }
 
     // [/Gyamap] からデータ取得
     let title = 'Gyamap'
-    if(args['title']){
-	title = args['title']
+    if (args['title']) {
+        title = args['title']
     }
     else { // Gyamap.com/逗子八景 みたいなURL
-	let match = location.href.match(/\/([^\/]+)$/)
-	if(match){
-	    title = match[1]
-	}
+        let match = location.href.match(/\/([^\/]+)$/)
+        if (match) {
+            title = match[1]
+        }
     }
 
     console.log(`project = ${project}`)
 
     fetch(`/${project}/info/${title}`)
-	.then((response) => response.text())
-	.then((data) => {
-	    console.log(`fetch /${project}/info/${title}`)
-	    console.log(`fetch => data=${data}`)
-	    locations = JSON.parse(data)
-	    console.log(locations)
-	    locSearchAndDisplay() ///////
-	})
+        .then((response) => response.text())
+        .then((data) => {
+            console.log(`fetch /${project}/info/${title}`)
+            console.log(`fetch => data=${data}`)
+            locations = JSON.parse(data)
+            console.log(locations)
+            locSearchAndDisplay() ///////
+        })
 })
 
+// 距離計算
 function distance(lat1, lng1, lat2, lng2) {
     const R = Math.PI / 180;
-    lat1 *= R;
+    lat1 *= R; // ラジアンに変換
     lng1 *= R;
     lat2 *= R;
     lng2 *= R;
@@ -81,7 +81,7 @@ function distance(lat1, lng1, lat2, lng2) {
 }
 
 // 方位角
-function angle(lat1, lng1, lat2, lng2){
+function angle(lat1, lng1, lat2, lng2) {
     const R = Math.PI / 180;
     lat1 *= R
     lng1 *= R
@@ -91,118 +91,119 @@ function angle(lat1, lng1, lat2, lng2){
     let y = Math.sin(deltax)
     let x = Math.cos(lat1) * Math.tan(lat2) - Math.sin(lat1) * Math.cos(deltax)
     let psi = Math.atan2(y, x) * 180 / Math.PI
-    if(psi < 0) psi += 360
+    if (psi < 0) psi += 360
     return psi
 }
 
-function dir(angle){
-    if(angle < 22.5) return 'N'
-    if(angle < 67.5) return 'NE'
-    if(angle < 112.5) return 'E'
-    if(angle < 157.5) return 'SE'
-    if(angle < 202.5) return 'S'
-    if(angle < 247.5) return 'SW'
-    if(angle < 292.5) return 'W'
-    if(angle < 337.5) return 'NW'
+function dirname(angle) {
+    if (angle < 22.5) return 'N'
+    if (angle < 67.5) return 'NE'
+    if (angle < 112.5) return 'E'
+    if (angle < 157.5) return 'SE'
+    if (angle < 202.5) return 'S'
+    if (angle < 247.5) return 'SW'
+    if (angle < 292.5) return 'W'
+    if (angle < 337.5) return 'NW'
     return 'N'
 }
 
-function locSearchAndDisplay(){
+function locSearchAndDisplay() {
     //alert('locSearchAndDisp')
-    $('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
+    $('#image').attr('src', blankimage)
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat()
     curpos.longitude = mapcenter.lng()
     showlists()
 }
 
-function initGoogleMaps(lat,lng){
+function initGoogleMaps(lat, lng) {
     console.log("initGoogleMaps()")
-    var latlng = new google.maps.LatLng(lat,lng)
+    var latlng = new google.maps.LatLng(lat, lng)
     var myOptions = {
-      zoom: 14,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 14,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     console.log("map generated")
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
-    google.maps.event.addListener(map, 'dragend', function(){
-    	$('#image').attr('src',"https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png") // 空白
-	clicked = false
-	locSearchAndDisplay()
+    google.maps.event.addListener(map, 'dragend', function () {
+        $('#image').attr('src', blankimage)
+        clicked = false
+        locSearchAndDisplay()
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 }
 
-function showlists(){
+function showlists() {
     // alert('showlists()')
     console.log('showlists()')
-    for(var i=0;i<locations.length;i++){
-	entry = locations[i]
-	console.log(entry.title)
-	entry.distance = distance(entry.latitude,entry.longitude,curpos.latitude,curpos.longitude)
+    for (var i = 0; i < locations.length; i++) {
+        entry = locations[i]
+        console.log(entry.title)
+        entry.distance = distance(entry.latitude, entry.longitude, curpos.latitude, curpos.longitude)
     }
     locations.sort((a, b) => { // 近い順にソート
-	return a.distance > b.distance ? 1 : -1;
+        return a.distance > b.distance ? 1 : -1;
     });
     console.log(`locations = ${locations}`)
 
     $('#list').empty()
-    for(var i=0;i<10 && i<locations.length;i++){
-	let loc = locations[i]
-	console.log(loc)
-	let li = $('<li>')
-	let e = $('<a>')
-	e.text(loc.title)
-	e.attr('href',`https://scrapbox.io/${project}/${loc.title}`)
-	e.attr('target','_blank')
-	li.append(e)
-	li.append($('<span>').text(' '))
-	
-	let img = $('<img>')
-	let d = dir(angle(curpos.latitude,curpos.longitude,loc.latitude,loc.longitude))
-	img.attr('src',`https://Gyamap.com/move_${d}.png`)
-	//img.attr('src',`/move_${d}.png`)
-	img.attr('height','15px')
-	img.attr('latitude',loc.latitude)
-	img.attr('longitude',loc.longitude)
-	img.attr('zoom',loc.zoom)
-	img.attr('photo',loc.photo)
-	img.click(function(e){
-	    clicktime = Date.now()
-	    map.panTo(new google.maps.LatLng($(e.target).attr('latitude'),$(e.target).attr('longitude')))
+    for (var i = 0; i < 10 && i < locations.length; i++) {
+        let loc = locations[i]
+        console.log(loc)
+        let li = $('<li>')
+        let e = $('<a>')
+            .text(loc.title)
+            .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
+            .attr('target', '_blank')
+        li.append(e)
+        li.append($('<span>').text(' '))
 
-	    selectedimage = `${$(e.target).attr('photo')}/raw`
-	    $('#image').attr('src',selectedimage)
-	    
-	    curpos.latitude = $(e.target).attr('latitude')
-	    curpos.longitude = $(e.target).attr('longitude')
-	    clicked = true
-	    showlists()
-	})
-	img.mouseover(function(e){
-	    if(Date.now() - clicktime > 500){ // クリック後すぐのmouseoverは無視
-		$('#image').attr('src',`${$(e.target).attr('photo')}/raw`)
-	    }
-	})
-	img.mouseleave(function(e){
-	    $('#image').attr('src',selectedimage)
-	})
-	if(!clicked || i != 0){
-	    li.append(img)
-	}
+        let img = $('<img>')
+        let d = dirname(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
+        img.attr('src', `https://Gyamap.com/move_${d}.png`)
+        //img.attr('src',`/move_${d}.png`)
+        img.attr('height', '15px')
+        img.attr('latitude', loc.latitude)
+        img.attr('longitude', loc.longitude)
+        img.attr('zoom', loc.zoom)
+        img.attr('photo', loc.photo)
+        img.click(function (e) {
+            clicktime = Date.now()
+            map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
 
-	li.append($('<span>').text(' '))
-	let desc = $("<span>")
-	desc.text(loc.desc)
-	li.append(desc)
+            selectedimage = `${$(e.target).attr('photo')}/raw`
+            $('#image').attr('src', selectedimage)
 
-	$('#list').append(li)
-    }}
-    
+            curpos.latitude = $(e.target).attr('latitude')
+            curpos.longitude = $(e.target).attr('longitude')
+            clicked = true
+            showlists()
+        })
+        img.mouseover(function (e) {
+            if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
+                $('#image').attr('src', `${$(e.target).attr('photo')}/raw`)
+            }
+        })
+        img.mouseleave(function (e) {
+            $('#image').attr('src', selectedimage)
+        })
+        if (!clicked || i != 0) {
+            li.append(img)
+        }
+
+        li.append($('<span>').text(' '))
+        let desc = $("<span>")
+        desc.text(loc.desc)
+        li.append(desc)
+
+        $('#list').append(li)
+    }
+}
+
 
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
@@ -210,22 +211,21 @@ function successCallback(position) {
         position.coords.longitude;
     curpos.latitude = position.coords.latitude
     curpos.longitude = position.coords.longitude
-    initGoogleMaps(curpos.latitude,curpos.longitude)
+    initGoogleMaps(curpos.latitude, curpos.longitude)
     showlists()
 }
 function errorCallback(error) {
     var err_msg = "";
-    switch(error.code)
-    {
+    switch (error.code) {
         case 1:
-        err_msg = "位置情報の利用が許可されていません";
-        break;
+            err_msg = "位置情報の利用が許可されていません";
+            break;
         case 2:
-        err_msg = "デバイスの位置が判定できません";
-        break;
+            err_msg = "デバイスの位置が判定できません";
+            break;
         case 3:
-        err_msg = "タイムアウトしました";
-        break;
+            err_msg = "タイムアウトしました";
+            break;
     }
     alert(err_msg)
     //document.getElementById("show_result").innerHTML = err_msg;
