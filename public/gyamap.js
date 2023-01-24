@@ -17,8 +17,6 @@ var clicked = false
 var clicktime
 
 $(function () {
-    console.log('function()')
-
     // URL引数の解析
     let args = {}
     document.location.search.substring(1).split('&').forEach((s) => {
@@ -57,9 +55,6 @@ $(function () {
         }
     }
 
-    console.log(`project = ${project}`)
-
-    //fetch(`/${project}/info/${title}`)
     if(type == 'project'){
         fetch(`/project_entries/${title}`)
             .then((response) => response.text())
@@ -109,7 +104,8 @@ function angle(lat1, lng1, lat2, lng2) {
     return psi
 }
 
-function direction(angle) { // 方位角を方位名に変える
+// 方位角を方位名に変える
+function direction(angle) {
     if (angle < 22.5) return 'N'
     if (angle < 67.5) return 'NE'
     if (angle < 112.5) return 'E'
@@ -152,7 +148,6 @@ function initGoogleMaps(lat, lng) {
 }
 
 function showlists() {
-    // alert('showlists()')
     console.log('showlists()')
     for (var i = 0; i < locations.length; i++) {
         entry = locations[i]

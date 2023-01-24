@@ -1,0 +1,27 @@
+body {
+    background-color: #fff;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 5px;
+    padding: 5px;
+}
+
+a:link {
+    color: #0000f0;
+}
+
+a:visited {
+    color: #0000f0;
+}
+
+a {
+    text-decoration: none;
+}
+
+span.title {
+    font-size: large;
+    font-weight: bold;
+}
+
+span.tab {
+    font-weight: bold;
+}

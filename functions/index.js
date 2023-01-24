@@ -1,5 +1,5 @@
 //
-// /Gyamap のデータをリストするFirebase function
+// /Gyamap のデータをリストする Firebase function
 //
 
 const functions = require('firebase-functions')
