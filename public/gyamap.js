@@ -109,7 +109,7 @@ function angle(lat1, lng1, lat2, lng2) {
     return psi
 }
 
-function dirname(angle) {
+function direction(angle) { // 方位角を方位名に変える
     if (angle < 22.5) return 'N'
     if (angle < 67.5) return 'NE'
     if (angle < 112.5) return 'E'
@@ -177,7 +177,7 @@ function showlists() {
         li.append($('<span>').text(' '))
 
         let img = $('<img>')
-        let d = dirname(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
+        let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         img.attr('src', `https://Gyamap.com/move_${d}.png`)
         //img.attr('src',`/move_${d}.png`)
         img.attr('height', '15px')

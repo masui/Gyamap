@@ -44,12 +44,14 @@ app.get('/page_entries/:title', (request, response) => { // Gyamap.com/page_entr
 })
 
 app.get('/project_entries/:project', (request, response) => { // プロジェクト名からページのリストを得る
+    datalist = []
     console.log(`app = request=${request.params.project}`)
     project = request.params.project
     getlist_project(`https://scrapbox.io/api/pages/${project}`, response)
  })
 
 app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 みたいなアクセス
+    datalist = []
     data.project = request.params.project
     data.title = request.params.title
     data.type = 'page'
@@ -59,13 +61,14 @@ app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 
 
 // Gyamap.com/名前
 app.get('/:name', (request, response) => {
+    datalist = []
     let data = {}
     // name というプロジェクトが有るかどうかで処理を分ける。
     // プロジェクトが存在する場合はプロジェクト内の全ページをチェック
     fetch(`https://scrapbox.io/api/pages/${request.params.name}`)
         .then((response) => response.json())
         .then((json) => {
-            if (json.name == 'NotFoundError') {
+            if (json.name == 'NotFoundError') { // プロジェクト名でなかった場合
                 data.project = "Gyamap"
                 data.title = request.params.name
                 data.type = 'page'
@@ -101,7 +104,7 @@ var wait_res
 
 
 async function getlist_project(url, res) {
-    let rrr = res
+    let getlist_res = res
     console.log(`url = ${url}`)
     var response = await fetch(url)
     var json = await response.json()
@@ -151,8 +154,8 @@ async function getlist_project(url, res) {
         //console.log(`urllist = ${urllist}`)
     }))
     console.log('end')
-    rrr.set('Access-Control-Allow-Origin', '*')
-    rrr.json(datalist)
+    getlist_res.set('Access-Control-Allow-Origin', '*')
+    getlist_res.json(datalist)
 }
 
 function wait_pending() {
