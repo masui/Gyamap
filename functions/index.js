@@ -2,7 +2,7 @@
 // /Gyamap のデータをリストするFirebase function
 //
 
-const functions = require("firebase-functions")
+const functions = require('firebase-functions')
 //const fetch = require('node-fetch')
  
 // Firebaseでexpressを利用
@@ -15,7 +15,7 @@ var urllist = []
 // public/favicon.ico などが 以下のapp.get()でマッチしないようになるハズ?
 app.use(express.static('public'))
 
-// views/index.ejs を使う
+// functions/views/index.ejs を使う
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
@@ -47,6 +47,10 @@ app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 
 })
 
 // Gyamap.com/名前
+// 名前はプロジェクト名かもしれないしページタイトルかもしれない
+// 名前のプロジェクトがあれば、そのプロジェクトの中の全ページを使う
+// プロジェクトが無い場合は、/Gyamap/の下のその名前のページを使う
+//
 app.get('/:name', (request, response) => {
     //datalist = []
     let data = {}
@@ -156,13 +160,12 @@ async function getlist_page(project, title, res){
     if (visited_pages[url]) return
     visited_pages[url] = true
 
-    // Scrapboxデータを取得
+    // Scrapboxデータを再帰的に取得
     pending += 1
     console.log(`pending +1 pending=${pending}`)
     var response = await fetch(url)
     var text = await (response.text())
     let lines = text.split(/\n/)
-    //let title = lines[0]
     let entry = {}
     let desc = ""
     for (let i = 1; i < lines.length; i++) {
@@ -188,7 +191,6 @@ async function getlist_page(project, title, res){
         match = line.match(/\[([^\[\]]*)\]/)
         if (match) {
             getlist_page(project, match[1], null)
-            //getlist_page(`https://scrapbox.io/api/pages/${project}/${match[1]}/text`, null)
             continue
         }
     }
