@@ -22,17 +22,20 @@ app.set('view engine', 'ejs')
 // Gyamap.com/プロジェクト/page_entries/場所
 app.get('/:project/page_entries/:title', (request, response) => { // Gyamap.com/gyamap/page_entries/ツマガリ みたいなアクセス
     datalist = []
+    visited_pages = {}
     getlist_page(request.params.project, request.params.title, response)
 })
 
 // Gyamap.com/page_entries/場所
 app.get('/page_entries/:title', (request, response) => { // Gyamap.com/page_entries/ツマガリ みたいなアクセス
     datalist = []
+    visited_pages = {}
     getlist_page('Gyamap', request.params.title, response)
 })
 
 app.get('/project_entries/:project', (request, response) => { // プロジェクト名からページのリストを得る
     datalist = []
+    visited_pages = {}
     getlist_project(request.params.project, response)
  })
 
@@ -111,7 +114,7 @@ async function getlist_project(project,res){
             match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
             if (match) {
                 s = `${title} - ${line}`
-                if (!urllist.includes(s)) {
+                if (!urllist.includes(s) || true) { // ****** これがいけなかったのかも!?
                     urllist.push(s)
                     console.log(`s = ${s}`)
 

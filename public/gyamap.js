@@ -160,7 +160,7 @@ function showlists() {
     console.log(`locations = ${locations}`)
 
     $('#list').empty()
-    for (var i = 0; i < 10 && i < locations.length; i++) {
+    for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
         console.log(loc)
         let li = $('<li>')
