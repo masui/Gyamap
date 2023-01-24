@@ -9,8 +9,6 @@ const functions = require('firebase-functions')
 const express = require('express');
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
-var urllist = []
-
 // 静的ファイルはこれで提供
 // public/favicon.ico などが 以下のapp.get()でマッチしないようになるハズ?
 app.use(express.static('public'))
@@ -113,17 +111,11 @@ async function getlist_project(project,res){
             }
             match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
             if (match) {
-                s = `${title} - ${line}`
-                if (!urllist.includes(s) || true) { // ****** これがいけなかったのかも!?
-                    urllist.push(s)
-                    console.log(`s = ${s}`)
-
-                    entry.title = title
-                    entry.latitude = Number(match[1]) // 西経の処理が必要!!
-                    entry.longitude = Number(match[2])
-                    entry.zoom = Number(match[3])
-                    continue
-                }
+                entry.title = title
+                entry.latitude = Number(match[1]) // 西経の処理が必要!!
+                entry.longitude = Number(match[2])
+                entry.zoom = Number(match[3])
+                continue
             }
             if (!line.match(/^\s*$/) && desc == "") {
                 if (!line.match(/\[http/)) {
@@ -137,7 +129,6 @@ async function getlist_project(project,res){
         if (entry.latitude) {
             datalist.push(entry)
         }
-            //console.log(`urllist = ${urllist}`)
     }))
     console.log('end')
     getlist_res.set('Access-Control-Allow-Origin', '*')
