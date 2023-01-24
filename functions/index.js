@@ -9,8 +9,6 @@ const functions = require("firebase-functions")
 const express = require('express');
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
-var project
-
 var urllist = []
 
 // 静的ファイルはこれで提供
@@ -21,37 +19,26 @@ app.use(express.static('public'))
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
-let data = { // index.ejsに渡すためのデータ
-    loc: "現在地",
-    project: "Gyamap",
-    title: "Gyamap"
-}
-
 // Gyamap.com/プロジェクト/page_entries/場所
 app.get('/:project/page_entries/:title', (request, response) => { // Gyamap.com/gyamap/page_entries/ツマガリ みたいなアクセス
     datalist = []
-    project = request.params.project
-    rooturl = texturl(project, request.params.title)
-    getlist_page(rooturl, response)
+    getlist_page(request.params.project, request.params.title, response)
 })
 
 // Gyamap.com/page_entries/場所
 app.get('/page_entries/:title', (request, response) => { // Gyamap.com/page_entries/ツマガリ みたいなアクセス
     datalist = []
-    project = 'Gyamap'
-    rooturl = texturl(project, request.params.title)
-    getlist_page(rooturl, response)
+    getlist_page('Gyamap', request.params.title, response)
 })
 
 app.get('/project_entries/:project', (request, response) => { // プロジェクト名からページのリストを得る
     datalist = []
-    console.log(`app = request=${request.params.project}`)
-    project = request.params.project
-    getlist_project(`https://scrapbox.io/api/pages/${project}`, response)
+    getlist_project(request.params.project, response)
  })
 
 app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 みたいなアクセス
-    datalist = []
+    //datalist = []
+    let data = {}
     data.project = request.params.project
     data.title = request.params.title
     data.type = 'page'
@@ -61,7 +48,7 @@ app.get('/:project/:title', (request, response) => { // Gyamap.com/masui/写真 
 
 // Gyamap.com/名前
 app.get('/:name', (request, response) => {
-    datalist = []
+    //datalist = []
     let data = {}
     // name というプロジェクトが有るかどうかで処理を分ける。
     // プロジェクトが存在する場合はプロジェクト内の全ページをチェック
@@ -93,25 +80,19 @@ exports.app = functions.https.onRequest(app)
 
 var visited_pages = {} // 同じページを再訪しないように
 
-function texturl(project, title) {
-    return `https://scrapbox.io/api/pages/${project}/${title}/text`
-}
-
 var datalist = [] // ブラウザに返すデータ
 
-var pending = 0
-var wait_res
 
-async function getlist_project(url, res) {
+async function getlist_project(project,res){
+    url = `https://scrapbox.io/api/pages/${project}`
     let getlist_res = res
     console.log(`url = ${url}`)
     var response = await fetch(url)
     var json = await response.json()
     console.log(project)
     await Promise.all(json.pages.map(page => fetch(`https://scrapbox.io/api/pages/${project}/${page.title}/text`)
-    .then(result => result.text()))
+        .then(result => result.text()))
     ).then(results => results.forEach((text) => {
-        //console.log(text)
         let desc = ""
         let a = text.split(/\n/)
         let title = a[0]
@@ -123,14 +104,13 @@ async function getlist_project(url, res) {
                 entry.photo = match[i]
                 continue
             }
-            //console.log(line)
             match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
             if (match) {
                 s = `${title} - ${line}`
                 if (!urllist.includes(s)) {
                     urllist.push(s)
                     console.log(`s = ${s}`)
-                    
+
                     entry.title = title
                     entry.latitude = Number(match[1]) // 西経の処理が必要!!
                     entry.longitude = Number(match[2])
@@ -150,12 +130,15 @@ async function getlist_project(url, res) {
         if (entry.latitude) {
             datalist.push(entry)
         }
-        //console.log(`urllist = ${urllist}`)
+            //console.log(`urllist = ${urllist}`)
     }))
     console.log('end')
     getlist_res.set('Access-Control-Allow-Origin', '*')
     getlist_res.json(datalist)
 }
+    
+var pending = 0
+var wait_res
 
 function wait_pending() {
     console.log(`wait_pending() - pending=${pending}`)
@@ -168,7 +151,8 @@ function wait_pending() {
     }
 }
 
-async function getlist_page(url, res) {
+async function getlist_page(project, title, res){
+    let url = `https://scrapbox.io/api/pages/${project}/${title}/text`
     if (visited_pages[url]) return
     visited_pages[url] = true
 
@@ -178,7 +162,7 @@ async function getlist_page(url, res) {
     var response = await fetch(url)
     var text = await (response.text())
     let lines = text.split(/\n/)
-    let title = lines[0]
+    //let title = lines[0]
     let entry = {}
     let desc = ""
     for (let i = 1; i < lines.length; i++) {
@@ -203,7 +187,8 @@ async function getlist_page(url, res) {
         }
         match = line.match(/\[([^\[\]]*)\]/)
         if (match) {
-            getlist_page(texturl(project, match[1]), null)
+            getlist_page(project, match[1], null)
+            //getlist_page(`https://scrapbox.io/api/pages/${project}/${match[1]}/text`, null)
             continue
         }
     }
