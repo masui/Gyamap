@@ -102,7 +102,6 @@ var datalist = [] // ブラウザに返すデータ
 var pending = 0
 var wait_res
 
-
 async function getlist_project(url, res) {
     let getlist_res = res
     console.log(`url = ${url}`)
