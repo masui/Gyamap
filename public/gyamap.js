@@ -59,15 +59,29 @@ $(function () {
 
     console.log(`project = ${project}`)
 
-    fetch(`/${project}/info/${title}`)
+    //fetch(`/${project}/info/${title}`)
+    if(type == 'project'){
+        fetch(`/project_entries/${title}`)
+            .then((response) => response.text())
+            .then((data) => {
+                console.log(`fetch /project_entries/${title}`)
+                console.log(`fetch => data=${data}`)
+                locations = JSON.parse(data)
+                console.log(locations)
+                locSearchAndDisplay() ///////
+            })
+    }
+    else {
+        fetch(`/page_entries/${title}`)
         .then((response) => response.text())
         .then((data) => {
-            console.log(`fetch /${project}/info/${title}`)
+            console.log(`fetch /page_entries/${title}`)
             console.log(`fetch => data=${data}`)
             locations = JSON.parse(data)
             console.log(locations)
             locSearchAndDisplay() ///////
         })
+    }
 })
 
 // 距離計算
