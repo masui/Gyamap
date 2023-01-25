@@ -1,5 +1,6 @@
 local:
 	firebase serve
+d: deploy
 deploy:
 	firebase deploy
 

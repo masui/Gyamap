@@ -59,22 +59,16 @@ $(function () {
         fetch(`/project_entries/${title}`)
             .then((response) => response.text())
             .then((data) => {
-                console.log(`fetch /project_entries/${title}`)
-                console.log(`fetch => data=${data}`)
                 locations = JSON.parse(data)
-                console.log(locations)
-                locSearchAndDisplay() ///////
+                locSearchAndDisplay(true) ///////
             })
     }
     else {
         fetch(`/page_entries/${title}`)
         .then((response) => response.text())
         .then((data) => {
-            console.log(`fetch /page_entries/${title}`)
-            console.log(`fetch => data=${data}`)
             locations = JSON.parse(data)
-            console.log(locations)
-            locSearchAndDisplay() ///////
+            locSearchAndDisplay(true) ///////
         })
     }
 })
@@ -117,15 +111,34 @@ function direction(angle) {
     return 'N'
 }
 
-function locSearchAndDisplay() {
+function locSearchAndDisplay(showimages) {
     //alert('locSearchAndDisp')
-    //$('#imagelist').attr('src', blankimage)
-    $('#imagelist').empty()
-    $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
+    // $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat()
     curpos.longitude = mapcenter.lng()
     showlists()
+    
+    if(showimages){
+        $('#imagelist').empty()
+        for (let i = 0; i < 6; i++) {
+            let img = $('<img>')
+            img.attr('src', `${locations[i].photo}/raw`)
+                .attr('height', 150)
+                .attr('padding', '4px')
+                .appendTo('#imagelist')
+            img.attr('index', i)
+            img.click(function (e) {
+                let ind = $(e.target).attr('index')
+                map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
+
+                selectedimage = `${locations[ind].photo}/raw`
+                $('#imagelist').empty()
+                $('<img>').attr('src', selectedimage).attr('height', 400).appendTo('#imagelist')
+                locSearchAndDisplay(false)
+            })
+        }
+    }  
 }
 
 function initGoogleMaps(lat, lng) {
@@ -143,7 +156,7 @@ function initGoogleMaps(lat, lng) {
     google.maps.event.addListener(map, 'dragend', function () {
         $('#image').attr('src', blankimage)
         clicked = false
-        locSearchAndDisplay()
+        locSearchAndDisplay(true)
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
@@ -153,18 +166,15 @@ function showlists() {
     console.log('showlists()')
     for (var i = 0; i < locations.length; i++) {
         entry = locations[i]
-        console.log(entry.title)
         entry.distance = distance(entry.latitude, entry.longitude, curpos.latitude, curpos.longitude)
     }
     locations.sort((a, b) => { // 近い順にソート
         return a.distance > b.distance ? 1 : -1;
     });
-    console.log(`locations = ${locations}`)
 
     $('#list').empty()
     for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
-        console.log(loc)
         let li = $('<li>')
         let e = $('<a>')
             .text(loc.title)
@@ -187,7 +197,6 @@ function showlists() {
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
 
             selectedimage = `${$(e.target).attr('photo')}/raw`
-            //$('#imagelist').attr('src', selectedimage)
             $('#imagelist').empty()
             $('<img>').attr('src',selectedimage).attr('height',400).appendTo('#imagelist')
         
@@ -198,15 +207,11 @@ function showlists() {
         })
         img.mouseover(function (e) {
             if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
-                //$('#imagelist').attr('src', `${$(e.target).attr('photo')}/raw`)
                 $('#imagelist').empty()
                 $('<img>').attr('src',`${$(e.target).attr('photo')}/raw`).attr('height',400).appendTo('#imagelist')
-                let photourl = `${$(e.target).attr('photo')}/raw`
-                console.log(`photo = ${photourl}`)
             }
         })
         img.mouseleave(function (e) {
-            //$('#imagelist').attr('src', selectedimage)
             $('#imagelist').empty()
             $('<img>').attr('src', selectedimage).attr('height',400).appendTo('#imagelist')
         })
@@ -222,7 +227,6 @@ function showlists() {
         $('#list').append(li)
     }
 }
-
 
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
