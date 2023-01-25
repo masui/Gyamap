@@ -124,8 +124,9 @@ function locSearchAndDisplay(showimages) {
         for (let i = 0; i < 6; i++) {
             let img = $('<img>')
             img.attr('src', `${locations[i].photo}/raw`)
-                .attr('height', 150)
-                .attr('padding', '4px')
+                .css('height', '130px')
+                .css('margin', '4px')
+                .css('border-radius','4px')
                 .appendTo('#imagelist')
             img.attr('index', i)
             img.click(function (e) {
@@ -134,7 +135,12 @@ function locSearchAndDisplay(showimages) {
 
                 selectedimage = `${locations[ind].photo}/raw`
                 $('#imagelist').empty()
-                $('<img>').attr('src', selectedimage).attr('height', 400).appendTo('#imagelist')
+                $('<img>')
+                    .attr('src', selectedimage)
+                    .attr('height', 400)
+                    .css('margin', '4px')
+                    .css('border-radius','4px')
+                    .appendTo('#imagelist')
                 locSearchAndDisplay(false)
             })
         }
@@ -198,9 +204,13 @@ function showlists() {
 
             selectedimage = `${$(e.target).attr('photo')}/raw`
             $('#imagelist').empty()
-            $('<img>').attr('src',selectedimage).attr('height',400).appendTo('#imagelist')
-        
-            curpos.latitude = $(e.target).attr('latitude')
+            $('<img>')
+                .attr('src', selectedimage)
+                .attr('height', 400)
+                .css('border-radius','4px')
+                .css('margin','4px')
+                .appendTo('#imagelist')
+                    curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             clicked = true
             showlists()
@@ -208,12 +218,22 @@ function showlists() {
         img.mouseover(function (e) {
             if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
                 $('#imagelist').empty()
-                $('<img>').attr('src',`${$(e.target).attr('photo')}/raw`).attr('height',400).appendTo('#imagelist')
+                $('<img>')
+                    .attr('src', `${$(e.target).attr('photo')}/raw`)
+                    .attr('height', 400)
+                    .css('border-radius','4px')
+                    .css('margin','4px')
+                    .appendTo('#imagelist')
             }
         })
         img.mouseleave(function (e) {
             $('#imagelist').empty()
-            $('<img>').attr('src', selectedimage).attr('height',400).appendTo('#imagelist')
+            $('<img>')
+                .attr('src', selectedimage)
+                .attr('height',400)
+                .css('border-radius','4px')
+                .css('margin','4px')
+                .appendTo('#imagelist')
         })
         if (!clicked || i != 0) {
             li.append(img)
