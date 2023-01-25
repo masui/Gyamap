@@ -25,3 +25,15 @@ span.title {
 span.tab {
     font-weight: bold;
 }
+
+.largeimage {
+    height: 400px;
+    margin: 3px;
+    border-radius: 4px;
+}
+
+.smallimage {
+    height: 130px;
+    margin: 3px;
+    border-radius: 4px;
+}
