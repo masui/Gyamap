@@ -104,25 +104,25 @@ async function getlist_project(project,res){
         let entry = {}
         for (let i = 1; i < a.length; i++) {
             let line = a[i]
-            let match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
+            let match = line.match(/(https?:\/\/gyazo\.com\/[0-9a-f]{32})/) // Gyazo画像
             if (match && !entry.photo) {
-                entry.photo = match[i]
-                continue
-            }
-            match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
-            if (match) {
-                entry.title = title
-                entry.latitude = Number(match[1]) // 西経の処理が必要!!
-                entry.longitude = Number(match[2])
-                entry.zoom = Number(match[3])
-                continue
-            }
-            if (!line.match(/^\s*$/) && desc == "") {
-                if (!line.match(/\[http/)) {
-                    desc = line.replace(/\[/g, '').replace(/\]/g, '')
-                }
+                entry.photo = match[1]
             }
             else {
+                match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
+                if (match) {
+                    entry.title = title
+                    entry.latitude = Number(match[1]) // 西経の処理が必要!!
+                    entry.longitude = Number(match[2])
+                    entry.zoom = Number(match[3])
+                }
+                else {
+                    if (!line.match(/^\s*$/) && desc == "") {
+                        if (!line.match(/\[http/)) {
+                            desc = line.replace(/\[/g, '').replace(/\]/g, '')
+                        }
+                    }
+                }
             }
         }
         entry.desc = desc
@@ -164,9 +164,9 @@ async function getlist_page(project, title, res){
     let desc = ""
     for (let i = 1; i < lines.length; i++) {
         let line = lines[i]
-        let match = line.match(/(https?:\/\/gyazo\.com\/[\0-9a-f]{32})/) // Gyazo画像
+        let match = line.match(/(https?:\/\/gyazo\.com\/[0-9a-f]{32})/) // Gyazo画像
         if (match && !entry.photo) {
-            entry.photo = match[i]
+            entry.photo = match[1]
             continue
         }
         match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合

@@ -119,7 +119,9 @@ function direction(angle) {
 
 function locSearchAndDisplay() {
     //alert('locSearchAndDisp')
-    $('#image').attr('src', blankimage)
+    //$('#imagelist').attr('src', blankimage)
+    $('#imagelist').empty()
+    $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat()
     curpos.longitude = mapcenter.lng()
@@ -185,8 +187,10 @@ function showlists() {
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
 
             selectedimage = `${$(e.target).attr('photo')}/raw`
-            $('#image').attr('src', selectedimage)
-
+            //$('#imagelist').attr('src', selectedimage)
+            $('#imagelist').empty()
+            $('<img>').attr('src',selectedimage).attr('height',400).appendTo('#imagelist')
+        
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             clicked = true
@@ -194,11 +198,17 @@ function showlists() {
         })
         img.mouseover(function (e) {
             if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
-                $('#image').attr('src', `${$(e.target).attr('photo')}/raw`)
+                //$('#imagelist').attr('src', `${$(e.target).attr('photo')}/raw`)
+                $('#imagelist').empty()
+                $('<img>').attr('src',`${$(e.target).attr('photo')}/raw`).attr('height',400).appendTo('#imagelist')
+                let photourl = `${$(e.target).attr('photo')}/raw`
+                console.log(`photo = ${photourl}`)
             }
         })
         img.mouseleave(function (e) {
-            $('#image').attr('src', selectedimage)
+            //$('#imagelist').attr('src', selectedimage)
+            $('#imagelist').empty()
+            $('<img>').attr('src', selectedimage).attr('height',400).appendTo('#imagelist')
         })
         if (!clicked || i != 0) {
             li.append(img)
