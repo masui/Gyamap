@@ -60,7 +60,8 @@ $(function () {
             .then((response) => response.text())
             .then((data) => {
                 locations = JSON.parse(data)
-                locSearchAndDisplay(true) ///////
+                locSearchAndDisplay() ///////
+                shownearbyimages() // 何故か出ないのはMapのせい?
             })
     }
     else {
@@ -68,7 +69,8 @@ $(function () {
         .then((response) => response.text())
         .then((data) => {
             locations = JSON.parse(data)
-            locSearchAndDisplay(true) ///////
+            locSearchAndDisplay() ///////
+            shownearbyimages()
         })
     }
 })
@@ -111,36 +113,37 @@ function direction(angle) {
     return 'N'
 }
 
-function locSearchAndDisplay(showimages) {
+function shownearbyimages(){
+    $('#imagelist').empty()
+    for (let i = 0; i < 6; i++) {
+        let img = $('<img>')
+        img.attr('src', `${locations[i].photo}/raw`)
+            .attr('class','smallimage')
+            .appendTo('#imagelist')
+        img.attr('index', i)
+        img.click(function (e) {
+            let ind = $(e.target).attr('index')
+            map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
+
+            selectedimage = `${locations[ind].photo}/raw`
+            $('#imagelist').empty()
+            $('<img>')
+                .attr('src', selectedimage)
+                .attr('class','largeimage')
+                .appendTo('#imagelist')
+            clicked = true
+            locSearchAndDisplay()
+        })
+    }
+}
+
+function locSearchAndDisplay() {
     //alert('locSearchAndDisp')
     // $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat()
     curpos.longitude = mapcenter.lng()
     showlists()
-    
-    if(showimages){
-        $('#imagelist').empty()
-        for (let i = 0; i < 6; i++) {
-            let img = $('<img>')
-            img.attr('src', `${locations[i].photo}/raw`)
-                .attr('class','smallimage')
-                .appendTo('#imagelist')
-            img.attr('index', i)
-            img.click(function (e) {
-                let ind = $(e.target).attr('index')
-                map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
-
-                selectedimage = `${locations[ind].photo}/raw`
-                $('#imagelist').empty()
-                $('<img>')
-                    .attr('src', selectedimage)
-                    .attr('class','largeimage')
-                    .appendTo('#imagelist')
-                locSearchAndDisplay(false)
-            })
-        }
-    }  
 }
 
 function initGoogleMaps(lat, lng) {
@@ -158,7 +161,8 @@ function initGoogleMaps(lat, lng) {
     google.maps.event.addListener(map, 'dragend', function () {
         $('#image').attr('src', blankimage)
         clicked = false
-        locSearchAndDisplay(true)
+        locSearchAndDisplay()
+        shownearbyimages()
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
@@ -187,8 +191,8 @@ function showlists() {
 
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
-        img.attr('src', `https://Gyamap.com/move_${d}.png`)
-        //img.attr('src',`/move_${d}.png`)
+        //img.attr('src', `https://Gyamap.com/move_${d}.png`)
+        img.attr('src',`move_${d}.png`)
         img.attr('height', '15px')
         img.attr('latitude', loc.latitude)
         img.attr('longitude', loc.longitude)
@@ -246,6 +250,7 @@ function successCallback(position) {
     curpos.longitude = position.coords.longitude
     initGoogleMaps(curpos.latitude, curpos.longitude)
     showlists()
+    shownearbyimages()
 }
 function errorCallback(error) {
     var err_msg = "";
