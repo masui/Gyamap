@@ -176,12 +176,12 @@ async function getlist_page(project, title, res){
             entry.photo = match[1]
             continue
         }
-        match = line.match(/\[(N([\d\.]+),E([\d\.]+),Z([\d\.]+))\]/) // 地図が登録されている場合
+        match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
         if (match) {
             entry.title = title
-            entry.latitude = Number(match[2]) // 西経の処理が必要!!
-            entry.longitude = Number(match[3])
-            entry.zoom = Number(match[4])
+            entry.latitude = Number(match[1]) // 西経の処理が必要!!
+            entry.longitude = Number(match[2])
+            entry.zoom = Number(match[3])
             continue
         }
         if (!line.match(/^\s*$/) && desc == "") {
