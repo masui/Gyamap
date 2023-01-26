@@ -7,7 +7,6 @@ const functions = require('firebase-functions')
  
 // Firebaseでexpressを利用
 const express = require('express');
-//const { data } = require('cypress/types/jquery'); なんじゃこりゃ
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
 // 静的ファイルはこれで提供
@@ -58,7 +57,7 @@ app.get('/:name', (request, response) => {
     let data = {}
     // name というプロジェクトが有るかどうかで処理を分ける。
     // プロジェクトが存在する場合はプロジェクト内の全ページをチェック
-    fetch(`https://scrapbox.io/api/pages/${request.params.name}`)
+    fetch(`https://scrapbox.io/api/pages/${request.params.name}?limit=1000`)
         .then((response) => response.json())
         .then((json) => {
             if (json.name == 'NotFoundError') { // プロジェクト名でなかった場合
@@ -68,8 +67,8 @@ app.get('/:name', (request, response) => {
                 data.pageurl = `https://Scrapbox.io/Gyamp/${request.params.name}`
                 response.render('index', data)  // views/index.ejs を表示
             }
-            else { // プロジェクト内のページすべてチェック
-                fetch(`https://scrapbox.io/api/projects/${request.params.name}`)
+            else { // nameはプロジェクト名
+                fetch(`https://scrapbox.io/api/projects/${request.params.name}`) // displayName取得に必要
                     .then((response) => response.json())
                     .then((json) => {
                         data.project = request.params.name
@@ -88,7 +87,6 @@ var visited_pages = {} // 同じページを再訪しないように
 
 var datalist = [] // ブラウザに返すデータ
 
-
 async function getlist_project(project,res){
     url = `https://scrapbox.io/api/pages/${project}`
     let getlist_res = res
@@ -101,9 +99,7 @@ async function getlist_project(project,res){
     ).then(results => results.forEach((text) => {
         let desc = ""
         let a = text.split(/\n/)
-        //console.log(`a.length = ${a.length}`)
         let title = a[0]
-        //console.log(`title = ${title}`)
         let entry = {}
         for (let i = 1; i < a.length; i++) {
             let line = a[i]
@@ -114,7 +110,7 @@ async function getlist_project(project,res){
             else {
                 // match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
                 match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
-                if (match) {
+                if (match && !entry.latitude) {
                     entry.title = title
                     entry.latitude = Number(match[1]) // 西経の処理が必要!!
                     entry.longitude = Number(match[2])
@@ -136,7 +132,6 @@ async function getlist_project(project,res){
         }
     }))
     console.log('end')
-    console.log(datalist)
     
     getlist_res.set('Access-Control-Allow-Origin', '*')
     getlist_res.json(datalist)
@@ -207,4 +202,3 @@ async function getlist_page(project, title, res){
         wait_pending()
     }
 }
-
