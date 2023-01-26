@@ -16,6 +16,14 @@ var selectedimage = blankimage
 var clicked = false
 var clicktime
 
+var state = {} // pushstateで使う
+
+window.addEventListener('popstate', (event) => {
+    console.log(event)
+    console.log(location + ", state: " + JSON.stringify(event.state))
+    location.href = location
+})
+
 $(function () {
     // URL引数の解析
     let args = {}
@@ -25,7 +33,6 @@ $(function () {
             args[name] = decodeURIComponent(value)
         }
     })
-    console.log(`args.loc = ${args.loc}`)
     if (args.loc) {
         var match
         match = args.loc.match(/([NS])([\d\.]+),?([EW])([\d\.]+)(,?Z([\d\.]+))?/) // e.g. S35.12E135.12Z13
@@ -49,14 +56,6 @@ $(function () {
                 console.log(curpos)
             }
         }
-        /*
-        var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
-        if (match) {
-            curpos.latitude = Number(match[1])
-            curpos.longitude = Number(match[2])
-            curpos.zoom = Number(match[3])
-        }
-        */
     }
     if (curpos.latitude) {
         initGoogleMaps(curpos.latitude, curpos.longitude)
@@ -148,6 +147,9 @@ function shownearbyimages() {
         img.click(function (e) {
             let ind = $(e.target).attr('index')
             map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
+            let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
+            + (locations[ind].longitude > 0 ? `E${locations[ind].longitude}` : `W${-locations[ind].longitude}`)
+            history.pushState(state, null, `?loc=${locstr}`)
 
             selectedimage = `${locations[ind].photo}/raw`
             $('#imagelist').empty()
@@ -225,6 +227,9 @@ function showlists() {
         img.click(function (e) {
             clicktime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
+            let locstr = (loc.latitude > 0 ? `N${loc.latitude}` : `S${-loc.latitude}`)
+                + (loc.longitude > 0 ? `E${loc.longitude}` : `W${-loc.longitude}`)
+            history.pushState(state,null,`?loc=${locstr}`)
 
             selectedimage = `${$(e.target).attr('photo')}/raw`
             $('#imagelist').empty()
