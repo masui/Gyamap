@@ -7,6 +7,7 @@ const functions = require('firebase-functions')
  
 // Firebaseでexpressを利用
 const express = require('express');
+//const { data } = require('cypress/types/jquery'); なんじゃこりゃ
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
 // 静的ファイルはこれで提供
@@ -100,7 +101,9 @@ async function getlist_project(project,res){
     ).then(results => results.forEach((text) => {
         let desc = ""
         let a = text.split(/\n/)
+        //console.log(`a.length = ${a.length}`)
         let title = a[0]
+        //console.log(`title = ${title}`)
         let entry = {}
         for (let i = 1; i < a.length; i++) {
             let line = a[i]
@@ -109,7 +112,8 @@ async function getlist_project(project,res){
                 entry.photo = match[1]
             }
             else {
-                match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
+                // match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
+                match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
                 if (match) {
                     entry.title = title
                     entry.latitude = Number(match[1]) // 西経の処理が必要!!
@@ -128,13 +132,16 @@ async function getlist_project(project,res){
         entry.desc = desc
         if (entry.latitude) {
             datalist.push(entry)
+            console.log(`datalist.length = ${datalist.length}`)
         }
     }))
     console.log('end')
+    console.log(datalist)
+    
     getlist_res.set('Access-Control-Allow-Origin', '*')
     getlist_res.json(datalist)
 }
-    
+
 var pending = 0
 var wait_res
 
