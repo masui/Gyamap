@@ -184,7 +184,7 @@ function initGoogleMaps(lat, lng) {
     console.log("initGoogleMaps()")
     var latlng = new google.maps.LatLng(lat, lng)
     var myOptions = {
-        zoom: 14,
+        zoom: curpos.zoom,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
