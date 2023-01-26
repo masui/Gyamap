@@ -169,6 +169,11 @@ function locSearchAndDisplay() {
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat()
     curpos.longitude = mapcenter.lng()
+
+    let locstr = (curpos.latitude > 0 ? `N${curpos.latitude}` : `S${-curpos.latitude}`)
+    + (curpos.longitude > 0 ? `E${curpos.longitude}` : `W${-curpos.longitude}`)
+    history.pushState(state,null,`?loc=${locstr}`)
+
     showlists()
 }
 
