@@ -213,6 +213,8 @@ function showlists() {
         return a.distance > b.distance ? 1 : -1;
     });
 
+    $('#loading').css('display','none')
+
     $('#list').empty()
     for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
