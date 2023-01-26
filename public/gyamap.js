@@ -203,7 +203,7 @@ function initGoogleMaps(lat, lng) {
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
 }
 
-var marker = null
+var marker = []
 function showlists() {
     console.log('showlists()')
     for (var i = 0; i < locations.length; i++) {
@@ -285,15 +285,17 @@ function showlists() {
     $('#loading').css('display','none')
 
     if(locations.length > 0){
-        var latlng = new google.maps.LatLng(locations[0].latitude, locations[0].longitude)
-        if(marker){
-            marker.setMap(null);
-            marker = null
+        for(let i=0;i<3;i++){
+            var latlng = new google.maps.LatLng(locations[i].latitude, locations[i].longitude)
+            if(marker[i]){
+                marker[i].setMap(null)
+                marker[i] = null
+            }
+            marker[i] = new google.maps.Marker({
+                position: latlng
+            })
+            marker[i].setMap(map);
         }
-        marker = new google.maps.Marker({
-            position: latlng
-        });
-        marker.setMap(map);
     }
 }
 
