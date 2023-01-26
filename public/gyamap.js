@@ -25,14 +25,38 @@ $(function () {
             args[name] = decodeURIComponent(value)
         }
     })
-
-    if (args['loc']) {
+    console.log(`args.loc = ${args.loc}`)
+    if (args.loc) {
+        var match
+        match = args.loc.match(/([NS])([\d\.]+),?([EW])([\d\.]+)(,?Z([\d\.]+))?/) // e.g. S35.12E135.12Z13
+        console.log(`match=${match}`)
+        if (match) {
+            curpos.latitude = Number(match[2])
+            if (match[1] == 'S') curpos.latitude = -curpos.latitude
+            curpos.longitude = Number(match[4])
+            if (match[3] == 'W') curpos.longitude = -curpos.longitude
+            curpos.zoom = 12
+            if (match[6])curpos.zoom = Number(match[6])
+            console.log(curpos)// 
+        }
+        else {
+            match = args.loc.match(/(\-?[\d\.]+),(\-?[\d\.]+)(,([\d\.]+))?/) // e.g. 35,135,12
+            if (match) {
+                curpos.latitude = Number(match[1])
+                curpos.longitude = Number(match[2])
+                curpos.zoom = 12
+                if (match[4]) curpos.zoom = Number(match[4])
+                console.log(curpos)
+            }
+        }
+        /*
         var match = args['loc'].match(/[NS]([\d\.]*),[EW]([\d\.]*),Z(.*)/)
         if (match) {
             curpos.latitude = Number(match[1])
             curpos.longitude = Number(match[2])
             curpos.zoom = Number(match[3])
         }
+        */
     }
     if (curpos.latitude) {
         initGoogleMaps(curpos.latitude, curpos.longitude)
@@ -55,7 +79,7 @@ $(function () {
         }
     }
 
-    if(type == 'project'){
+    if (type == 'project') {
         fetch(`/project_entries/${title}`)
             .then((response) => response.text())
             .then((data) => {
@@ -66,12 +90,12 @@ $(function () {
     }
     else {
         fetch(`/page_entries/${title}`)
-        .then((response) => response.text())
-        .then((data) => {
-            locations = JSON.parse(data)
-            locSearchAndDisplay() ///////
-            shownearbyimages()
-        })
+            .then((response) => response.text())
+            .then((data) => {
+                locations = JSON.parse(data)
+                locSearchAndDisplay() ///////
+                shownearbyimages()
+            })
     }
 })
 
@@ -113,12 +137,12 @@ function direction(angle) {
     return 'N'
 }
 
-function shownearbyimages(){
+function shownearbyimages() {
     $('#imagelist').empty()
     for (let i = 0; i < 6; i++) {
         let img = $('<img>')
         img.attr('src', `${locations[i].photo}/raw`)
-            .attr('class','smallimage')
+            .attr('class', 'smallimage')
             .appendTo('#imagelist')
         img.attr('index', i)
         img.click(function (e) {
@@ -129,7 +153,7 @@ function shownearbyimages(){
             $('#imagelist').empty()
             $('<img>')
                 .attr('src', selectedimage)
-                .attr('class','largeimage')
+                .attr('class', 'largeimage')
                 .appendTo('#imagelist')
             clicked = true
             locSearchAndDisplay()
@@ -192,7 +216,7 @@ function showlists() {
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
-        img.attr('src',`/move_${d}.png`)
+        img.attr('src', `/move_${d}.png`)
         img.attr('height', '15px')
         img.attr('latitude', loc.latitude)
         img.attr('longitude', loc.longitude)
@@ -206,9 +230,9 @@ function showlists() {
             $('#imagelist').empty()
             $('<img>')
                 .attr('src', selectedimage)
-                .attr('class','largeimage')
+                .attr('class', 'largeimage')
                 .appendTo('#imagelist')
-                    curpos.latitude = $(e.target).attr('latitude')
+            curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             clicked = true
             showlists()
@@ -218,7 +242,7 @@ function showlists() {
                 $('#imagelist').empty()
                 $('<img>')
                     .attr('src', `${$(e.target).attr('photo')}/raw`)
-                    .attr('class','largeimage')
+                    .attr('class', 'largeimage')
                     .appendTo('#imagelist')
             }
         })
@@ -226,7 +250,7 @@ function showlists() {
             $('#imagelist').empty()
             $('<img>')
                 .attr('src', selectedimage)
-                .attr('class','largeimage')
+                .attr('class', 'largeimage')
                 .appendTo('#imagelist')
         })
         if (!clicked || i != 0) {
