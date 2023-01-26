@@ -64,7 +64,7 @@ app.get('/:name', (request, response) => {
                 data.project = "Gyamap"
                 data.title = request.params.name
                 data.type = 'page'
-                data.pageurl = `https://Scrapbox.io/Gyamp/${request.params.name}`
+                data.pageurl = `https://Scrapbox.io/Gyamap/${request.params.name}`
                 response.render('index', data)  // views/index.ejs を表示
             }
             else { // nameはプロジェクト名
