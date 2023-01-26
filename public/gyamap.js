@@ -169,8 +169,8 @@ function locSearchAndDisplay() {
     //alert('locSearchAndDisp')
     // $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
     let mapcenter = map.getCenter();
-    curpos.latitude = mapcenter.lat()
-    curpos.longitude = mapcenter.lng()
+    curpos.latitude = mapcenter.lat().toFixed(5)
+    curpos.longitude = mapcenter.lng().toFixed(5)
 
     let locstr = (curpos.latitude > 0 ? `N${curpos.latitude}` : `S${-curpos.latitude}`)
     + (curpos.longitude > 0 ? `E${curpos.longitude}` : `W${-curpos.longitude}`)
@@ -228,15 +228,15 @@ function showlists() {
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
         img.attr('src', `/move_${d}.png`)
         img.attr('height', '15px')
-        img.attr('latitude', loc.latitude)
-        img.attr('longitude', loc.longitude)
+        img.attr('latitude', loc.latitude.toFixed(5))
+        img.attr('longitude', loc.longitude.toFixed(5))
         img.attr('zoom', loc.zoom)
         img.attr('photo', loc.photo)
         img.click(function (e) {
             clicktime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
-            let locstr = (loc.latitude > 0 ? `N${loc.latitude}` : `S${-loc.latitude}`)
-                + (loc.longitude > 0 ? `E${loc.longitude}` : `W${-loc.longitude}`)
+            let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
+                + (loc.longitude > 0 ? `E${loc.longitude.toFixed(5)}` : `W${-loc.longitude.toFixed(5)}`)
             locstr += `Z${loc.zoom}`
             history.pushState(state,null,`?loc=${locstr}`)
 
