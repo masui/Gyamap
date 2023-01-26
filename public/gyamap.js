@@ -212,20 +212,19 @@ function showlists() {
     locations.sort((a, b) => { // 近い順にソート
         return a.distance > b.distance ? 1 : -1;
     });
-
-    $('#loading').css('display','none')
-
+    
+    
     $('#list').empty()
     for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
         let li = $('<li>')
         let e = $('<a>')
-            .text(loc.title)
-            .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
-            .attr('target', '_blank')
+        .text(loc.title)
+        .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
+        .attr('target', '_blank')
         li.append(e)
         li.append($('<span>').text(' '))
-
+        
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
@@ -239,16 +238,16 @@ function showlists() {
             clicktime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
             let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
-                + (loc.longitude > 0 ? `E${loc.longitude.toFixed(5)}` : `W${-loc.longitude.toFixed(5)}`)
+            + (loc.longitude > 0 ? `E${loc.longitude.toFixed(5)}` : `W${-loc.longitude.toFixed(5)}`)
             locstr += `Z${loc.zoom}`
             history.pushState(state,null,`?loc=${locstr}`)
-
+            
             selectedimage = `${$(e.target).attr('photo')}/raw`
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
-                .attr('class', 'largeimage')
-                .appendTo('#imagelist')
+            .attr('src', selectedimage)
+            .attr('class', 'largeimage')
+            .appendTo('#imagelist')
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             curpos.zoom = map.getZoom()
@@ -259,34 +258,36 @@ function showlists() {
             if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
                 $('#imagelist').empty()
                 $('<img>')
-                    .attr('src', `${$(e.target).attr('photo')}/raw`)
-                    .attr('class', 'largeimage')
-                    .appendTo('#imagelist')
+                .attr('src', `${$(e.target).attr('photo')}/raw`)
+                .attr('class', 'largeimage')
+                .appendTo('#imagelist')
             }
         })
         img.mouseleave(function (e) {
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
-                .attr('class', 'largeimage')
-                .appendTo('#imagelist')
+            .attr('src', selectedimage)
+            .attr('class', 'largeimage')
+            .appendTo('#imagelist')
         })
         if (!clicked || i != 0) {
             li.append(img)
         }
-
+        
         li.append($('<span>').text(' '))
         let desc = $("<span>")
         desc.text(loc.desc)
         li.append(desc)
-
+        
         $('#list').append(li)
     }
+
+    $('#loading').css('display','none')
 }
 
 function successCallback(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
-        position.coords.latitude + "," +
+    position.coords.latitude + "," +
         position.coords.longitude;
     curpos.latitude = position.coords.latitude
     curpos.longitude = position.coords.longitude
