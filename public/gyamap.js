@@ -3,8 +3,9 @@
 // 位置データはFirebase functionで取得
 //
 
-var curpos = {} // 地図の中心座標
-var curzoom = 10
+var curpos = {
+    zoom: 12
+} // 地図の中心座標
 
 var locations = [] // POIリスト
 
