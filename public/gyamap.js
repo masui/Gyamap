@@ -149,6 +149,8 @@ function shownearbyimages() {
             map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
             let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
             + (locations[ind].longitude > 0 ? `E${locations[ind].longitude}` : `W${-locations[ind].longitude}`)
+            // locstr += `Z${locations[ind].zoom}`
+            locstr += `Z${map.getZoom()}`
             history.pushState(state, null, `?loc=${locstr}`)
 
             selectedimage = `${locations[ind].photo}/raw`
@@ -172,6 +174,7 @@ function locSearchAndDisplay() {
 
     let locstr = (curpos.latitude > 0 ? `N${curpos.latitude}` : `S${-curpos.latitude}`)
     + (curpos.longitude > 0 ? `E${curpos.longitude}` : `W${-curpos.longitude}`)
+    locstr += `Z${curpos.zoom}`
     history.pushState(state,null,`?loc=${locstr}`)
 
     showlists()
@@ -234,6 +237,7 @@ function showlists() {
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
             let locstr = (loc.latitude > 0 ? `N${loc.latitude}` : `S${-loc.latitude}`)
                 + (loc.longitude > 0 ? `E${loc.longitude}` : `W${-loc.longitude}`)
+            locstr += `Z${loc.zoom}`
             history.pushState(state,null,`?loc=${locstr}`)
 
             selectedimage = `${$(e.target).attr('photo')}/raw`
@@ -244,6 +248,7 @@ function showlists() {
                 .appendTo('#imagelist')
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
+            curpos.zoom = map.getZoom()
             clicked = true
             showlists()
         })
