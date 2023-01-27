@@ -143,6 +143,7 @@ function shownearbyimages() {
         let img = $('<img>')
         img.attr('src', `${locations[i].photo}/raw`)
             .attr('class', 'smallimage')
+            .attr('title',locations[i].title)
             .appendTo('#imagelist')
         img.attr('index', i)
         img.click(function (e) {
