@@ -7,6 +7,7 @@ const functions = require('firebase-functions')
  
 // Firebaseでexpressを利用
 const express = require('express');
+const { response } = require('express');
 const app = express(); // expressを利用! firebase.jsonの設定が大事
 
 // 静的ファイルはこれで提供
@@ -16,6 +17,10 @@ app.use(express.static('public'))
 // functions/views/index.ejs を使う
 app.set('views', './views')
 app.set('view engine', 'ejs')
+
+app.get('/', (request, response) => {
+    response.redirect('https://scrapbox.io/Gyamap')
+})
 
 // Gyamap.com/プロジェクト/page_entries/場所
 app.get('/:project/page_entries/:title', (request, response) => { // Gyamap.com/gyamap/page_entries/ツマガリ みたいなアクセス
