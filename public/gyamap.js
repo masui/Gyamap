@@ -338,7 +338,7 @@ function errorCallback(error) {
             err_msg = "タイムアウトしました";
             break;
     }
-    alert(err_msg)
+    // alert(err_msg)
     //document.getElementById("show_result").innerHTML = err_msg;
 
     curpos.latitude = 35.02914
