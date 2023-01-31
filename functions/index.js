@@ -8,7 +8,7 @@ const functions = require('firebase-functions')
 // Firebaseでexpressを利用
 const express = require('express');
 const { response } = require('express');
-const app = express(); // expressを利用! firebase.jsonの設定が大事
+const app = express(); // expressを利用! firebase.jsonの設定が大事a
 
 // 静的ファイルはこれで提供
 // public/favicon.ico などが 以下のapp.get()でマッチしないようになるハズ?

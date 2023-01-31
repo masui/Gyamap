@@ -45,7 +45,6 @@ $(function () {
             if (match[3] == 'W') curpos.longitude = -curpos.longitude
             curpos.zoom = 12
             if (match[6])curpos.zoom = Number(match[6])
-            console.log(curpos)// 
         }
         else {
             match = args.loc.match(/(\-?[\d\.]+),(\-?[\d\.]+)(,([\d\.]+))?/) // e.g. 35,135,12
@@ -54,17 +53,16 @@ $(function () {
                 curpos.longitude = Number(match[2])
                 curpos.zoom = 12
                 if (match[4]) curpos.zoom = Number(match[4])
-                console.log(curpos)
             }
         }
     }
-    if (curpos.latitude) {
-        initGoogleMaps(curpos.latitude, curpos.longitude)
-        showlists()
+    if (curpos.latitude) { // URLで引数が指定されていた場合
+        navigator.geolocation.getCurrentPosition(successCallback2, errorCallback) // なぜかこれを入れると動く
     }
     else {
-        console.log("getCurrentPosition()")
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+        console.log("getCurrentPosition()")
     }
 
     // [/Gyamap] からデータ取得
@@ -190,7 +188,7 @@ function initGoogleMaps(lat, lng) {
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
     console.log("map generated")
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
@@ -206,7 +204,7 @@ function initGoogleMaps(lat, lng) {
 
 var marker = []
 function showlists() {
-    console.log('showlists()')
+    console.log(`showlists() - locations = ${locations}`)
     for (var i = 0; i < locations.length; i++) {
         entry = locations[i]
         entry.distance = distance(entry.latitude, entry.longitude, curpos.latitude, curpos.longitude)
@@ -219,18 +217,21 @@ function showlists() {
     for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
         let li = $('<li>')
+        li.css('display','flex')
         let e = $('<a>')
-        .text(loc.title)
-        .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
-        .attr('target', '_blank')
+            .text(loc.title)
+            .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
+            .attr('target', '_blank')
+            .css('height','15px')
         li.append(e)
         li.append($('<span>').text(' '))
         
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
+        img.css('margin','3px')
         img.attr('src', `/move_${d}.png`)
-        img.attr('height', '15px')
+        img.attr('height', '18px')
         img.attr('latitude', loc.latitude.toFixed(5))
         img.attr('longitude', loc.longitude.toFixed(5))
         img.attr('zoom', loc.zoom)
@@ -246,9 +247,9 @@ function showlists() {
             selectedimage = `${$(e.target).attr('photo')}/raw`
             $('#imagelist').empty()
             $('<img>')
-            .attr('src', selectedimage)
-            .attr('class', 'largeimage')
-            .appendTo('#imagelist')
+                .attr('src', selectedimage)
+                .attr('class', 'largeimage')
+                .appendTo('#imagelist')
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             curpos.zoom = map.getZoom()
@@ -267,9 +268,9 @@ function showlists() {
         img.mouseleave(function (e) {
             $('#imagelist').empty()
             $('<img>')
-            .attr('src', selectedimage)
-            .attr('class', 'largeimage')
-            .appendTo('#imagelist')
+                .attr('src', selectedimage)
+                .attr('class', 'largeimage')
+                .appendTo('#imagelist')
         })
         if (!clicked || i != 0) {
             li.append(img)
@@ -283,10 +284,16 @@ function showlists() {
         $('#list').append(li)
     }
 
-    $('#loading').css('display','none')
+    $('#loading1').css('display','none')
+    $('#loading2').css('display','none')
+
+    // 地図上にマーカー表示
+    console.log(`locations = ${locations}`)
+    console.log(`locations[0] = ${locations[0]}`)
+    console.log(locations[0].latitude)
 
     if(locations.length > 0){
-        for(let i=0;i<3;i++){
+        for(let i=0;i<6 && i < locations.length;i++){
             var latlng = new google.maps.LatLng(locations[i].latitude, locations[i].longitude)
             if(marker[i]){
                 marker[i].setMap(null)
@@ -298,6 +305,14 @@ function showlists() {
             marker[i].setMap(map);
         }
     }
+}
+
+function successCallback2(position) {
+    mapsurl = "https://maps.google.com/maps?q=" +
+    curpos.latitude + "," + curpos.longitude;
+    initGoogleMaps(curpos.latitude, curpos.longitude)
+    showlists()
+    shownearbyimages()
 }
 
 function successCallback(position) {
