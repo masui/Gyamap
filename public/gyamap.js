@@ -340,4 +340,10 @@ function errorCallback(error) {
     }
     alert(err_msg)
     //document.getElementById("show_result").innerHTML = err_msg;
+
+    curpos.latitude = 35.02914
+    curpos.longitude = 135.75871
+    initGoogleMaps(curpos.latitude, curpos.longitude)
+    showlists()
+    shownearbyimages()
 }
