@@ -216,8 +216,10 @@ function showlists() {
     $('#list').empty()
     for (var i = 0; i < 20 && i < locations.length; i++) {
         let loc = locations[i]
-        let li = $('<li>')
+        //let li = $('<li>')
+        let li = $('<div>')
         li.css('display','flex')
+        /*
         let e = $('<a>')
             .text(loc.title)
             .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
@@ -225,6 +227,7 @@ function showlists() {
             .css('height','15px')
         li.append(e)
         li.append($('<span>').text(' '))
+        */
         
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
@@ -275,8 +278,26 @@ function showlists() {
         if (!clicked || i != 0) {
             li.append(img)
         }
-        
         li.append($('<span>').text(' '))
+
+        let e = $('<a>')
+            .text(loc.title)
+            .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
+            .attr('target', '_blank')
+            .css('height', '15px')
+        e.attr('photo', loc.photo)
+        e.mouseover(function (e) {
+            if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
+                $('#imagelist').empty()
+                $('<img>')
+                    .attr('src', `${$(e.target).attr('photo')}/raw`)
+                    .attr('class', 'largeimage')
+                    .appendTo('#imagelist')
+            }
+        })
+        li.append(e)
+        li.append($('<span>').text('　'))
+
         let desc = $("<span>")
         desc.text(loc.desc)
         li.append(desc)
