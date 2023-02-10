@@ -16,14 +16,19 @@ var selectedimage = blankimage
 
 var clicked = false
 var clicktime
-
 var state = {} // pushstateで使う
+
+var sort_by_title = false
+var top_index = 0 // タイトルでソートしたときのトップ行のインデクス
 
 window.addEventListener('popstate', (event) => {
     console.log(event)
     console.log(location + ", state: " + JSON.stringify(event.state))
     location.href = location
 })
+
+window.addEventListener('keydown', event => {
+  }, /* useCapture= */ false)
 
 $(function () {
     // URL引数の解析
@@ -95,6 +100,48 @@ $(function () {
                 shownearbyimages()
             })
     }
+
+    $(window).keydown(function(e){
+        e.preventDefault()
+        //alert(e.keyCode)
+        // 38 が上, 40 が下
+        if(e.keyCode == 38){
+            if(! sort_by_title){
+                sort_by_title = true
+                var curtitle = locations[0].title
+                locations.sort((a, b) => {
+                    return a.title > b.title ? 1 : -1;
+                })
+                for(top_index = 0; locations[top_index].title != curtitle; top_index++){}
+            }
+            else {
+                if (top_index > 0) {
+                    top_index -= 1
+                }
+            }
+            showlists()
+            shownearbyimages()
+            map.panTo(new google.maps.LatLng(locations[top_index].latitude, locations[top_index].longitude))
+        }
+        if(e.keyCode == 40){
+            if(! sort_by_title){
+                sort_by_title = true
+                var curtitle = locations[0].title
+                locations.sort((a, b) => {
+                    return a.title > b.title ? 1 : -1;
+                })
+                for(top_index = 0; locations[top_index].title != curtitle; top_index++){}
+            }
+            else {
+                if (top_index < locations.length - 1) {
+                    top_index += 1
+                }
+            }
+            showlists()
+            shownearbyimages()
+            map.panTo(new google.maps.LatLng(locations[top_index].latitude, locations[top_index].longitude))
+        }
+    });
 })
 
 // 距離計算
@@ -139,12 +186,16 @@ function shownearbyimages() {
     $('#imagelist').empty()
     for (let i = 0; i < 6; i++) {
         let img = $('<img>')
-        img.attr('src', `${locations[i].photo}/raw`)
-            .attr('class', 'smallimage')
-            .attr('title',locations[i].title)
-            .appendTo('#imagelist')
-        img.attr('index', i)
+        if(i+top_index < locations.length){
+            img.attr('src', `${locations[i + top_index].photo}/raw`)
+                .attr('class', 'smallimage')
+                .attr('title', locations[i + top_index].title)
+                .appendTo('#imagelist')
+        }
+        img.attr('index', i+top_index)
         img.click(function (e) {
+            top_index = 0
+            sort_by_title = false
             let ind = $(e.target).attr('index')
             map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
             let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
@@ -177,6 +228,7 @@ function locSearchAndDisplay() {
     locstr += `Z${curpos.zoom}`
     history.pushState(state,null,`?loc=${locstr}`)
 
+    sort_by_location()
     showlists()
 }
 
@@ -193,6 +245,8 @@ function initGoogleMaps(lat, lng) {
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', function () {
+        top_index = 0
+        sort_by_title = false
         $('#image').attr('src', blankimage)
         clicked = false
         locSearchAndDisplay()
@@ -200,46 +254,51 @@ function initGoogleMaps(lat, lng) {
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
+    google.maps.event.addListener(map, 'keydown', function (e) {
+        e.preventDefault()
+        e.stopPropagation();
+    })
 }
 
-var marker = []
-function showlists() {
-    console.log(`showlists() - locations = ${locations}`)
+function sort_by_location(){
     for (var i = 0; i < locations.length; i++) {
         entry = locations[i]
         entry.distance = distance(entry.latitude, entry.longitude, curpos.latitude, curpos.longitude)
     }
     locations.sort((a, b) => { // 近い順にソート
         return a.distance > b.distance ? 1 : -1;
-    });
+    })
+}
+
+var marker = []
+function showlists() {
+    // console.log(`showlists() - locations = ${locations}`)
     
     $('#list').empty()
-    for (var i = 0; i < 20 && i < locations.length; i++) {
-        let loc = locations[i]
+    // for (var i = 0; i < 20 && i < locations.length; i++) {
+    for (var i = 0; i < 20 && i + top_index < locations.length; i++) {
+        let loc = locations[i + top_index]
         //let li = $('<li>')
         let li = $('<div>')
+        li.css('margin','0px')
+        li.css('padding','0px')
         li.css('display','flex')
-        /*
-        let e = $('<a>')
-            .text(loc.title)
-            .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
-            .attr('target', '_blank')
-            .css('height','15px')
-        li.append(e)
-        li.append($('<span>').text(' '))
-        */
         
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
-        img.css('margin','3px')
+        img.css('margin','3px 6px 0px 0px')
+        img.css('padding','0px')
         img.attr('src', `/move_${d}.png`)
-        img.attr('height', '18px')
+        //img.attr('height', '16px')
+        img.css('height','18px')
         img.attr('latitude', loc.latitude.toFixed(5))
         img.attr('longitude', loc.longitude.toFixed(5))
         img.attr('zoom', loc.zoom)
         img.attr('photo', loc.photo)
         img.click(function (e) {
+            top_index = 0
+            sort_by_title = false
             clicktime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
             let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
@@ -257,6 +316,7 @@ function showlists() {
             curpos.longitude = $(e.target).attr('longitude')
             curpos.zoom = map.getZoom()
             clicked = true
+            sort_by_location()
             showlists()
         })
         img.mouseover(function (e) {
@@ -278,14 +338,23 @@ function showlists() {
         if (!clicked || i != 0) {
             li.append(img)
         }
-        li.append($('<span>').text(' '))
+
+        /*
+       $('<span>')
+           .text(' ')
+           .css('margin', '0px')
+           .css('padding', '0px')
+           .appendTo(li)
+           */
 
         let e = $('<a>')
             .text(loc.title)
             .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
             .attr('target', '_blank')
-            .css('height', '15px')
+            .css('height', '16px')
         e.attr('photo', loc.photo)
+        e.css('margin','2px 6px 2px 2px')
+        e.css('padding','0px')
         e.mouseover(function (e) {
             if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
                 $('#imagelist').empty()
@@ -295,11 +364,26 @@ function showlists() {
                     .appendTo('#imagelist')
             }
         })
+        e.mouseleave(function (e) {
+            $('#imagelist').empty()
+            $('<img>')
+                .attr('src', selectedimage)
+                .attr('class', 'largeimage')
+                .appendTo('#imagelist')
+        })
         li.append(e)
-        li.append($('<span>').text('　'))
+        /*
+        li.append($('<span>')
+            .css('margin','0px')
+            .css('padding','0px')
+            .text('　'))
+            */
 
         let desc = $("<span>")
-        desc.text(loc.desc)
+            .text(loc.desc)
+            .css('height','16px')
+            .css('margin','2px 6px 2px 2px')
+            .css('padding','0px')
         li.append(desc)
         
         $('#list').append(li)
@@ -309,21 +393,29 @@ function showlists() {
     $('#loading2').css('display','none')
 
     // 地図上にマーカー表示
-    console.log(`locations = ${locations}`)
+    //console.log(`locations = ${locations}`)
     console.log(`locations[0] = ${locations[0]}`)
     console.log(locations[0].latitude)
 
     if(locations.length > 0){
-        for(let i=0;i<6 && i < locations.length;i++){
-            var latlng = new google.maps.LatLng(locations[i].latitude, locations[i].longitude)
+        for(let i=0;i<locations.length;i++){
             if(marker[i]){
                 marker[i].setMap(null)
                 marker[i] = null
             }
-            marker[i] = new google.maps.Marker({
+        }
+        for(let i=0;i<6 && i+top_index < locations.length;i++){
+            var latlng = new google.maps.LatLng(locations[i+top_index].latitude, locations[i+top_index].longitude)
+            /*
+            if(marker[i+top_index]){
+                marker[i+top_index].setMap(null)
+                marker[i+top_index] = null
+            }
+            */
+            marker[i+top_index] = new google.maps.Marker({
                 position: latlng
             })
-            marker[i].setMap(map);
+            marker[i+top_index].setMap(map);
         }
     }
 }
@@ -332,6 +424,7 @@ function successCallback2(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
     curpos.latitude + "," + curpos.longitude;
     initGoogleMaps(curpos.latitude, curpos.longitude)
+    sort_by_location()
     showlists()
     shownearbyimages()
 }
@@ -343,6 +436,7 @@ function successCallback(position) {
     curpos.latitude = position.coords.latitude
     curpos.longitude = position.coords.longitude
     initGoogleMaps(curpos.latitude, curpos.longitude)
+    sort_by_location()
     showlists()
     shownearbyimages()
 }
@@ -365,6 +459,7 @@ function errorCallback(error) {
     curpos.latitude = 35.02914
     curpos.longitude = 135.75871
     initGoogleMaps(curpos.latitude, curpos.longitude)
+    sort_by_location()
     showlists()
     shownearbyimages()
 }

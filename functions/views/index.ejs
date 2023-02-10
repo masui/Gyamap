@@ -3,6 +3,7 @@
   <head>
     <!-- Viewportを設定すべきか -->
     <meta charset="utf-8">
+    <meta name=”viewport” content=”width=device-width,initial-scale=1″>
     <link rel="icon" href="/favicon.ico" />
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBWKRUvZyPd4hVwby3YVN9g2177B9peTEA&sensor=false"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -26,16 +27,18 @@
     <p></p>
     <img id="loading1" src="/loading.gif" height="40">
     
-    <div style="display:flex;">
-      <!-- <div id="mapcanvas" width=400 style="width:400px;height:400px;margin:4px;border-radius:4px;"></div> -->
+    <div class="pc" style="display:flex;">
       <div id="mapcanvas" width="400"></div>
-      <!-- <div id="imagelist" style="display:flex;flex-wrap:wrap;flex:1;"></div> -->
+      <div id="imagelist"></div>
+    </div>
+    <div class="sp">
+      <div id="mapcanvas" width="100%"></div>
       <div id="imagelist"></div>
     </div>
     
     <img id="loading2" src="/loading.gif" height="40">
 
-    <div id="list" style="margin:4px"></div>
+    <div id="list" style="margin:10px 4px 4px 4px;"></div>
 
   </body>
 </html>

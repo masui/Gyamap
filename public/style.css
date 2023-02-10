@@ -50,3 +50,19 @@ span.tab {
     margin:4px;
     border-radius:4px;
 }
+
+/* パソコンで見たときは"pc"のclassがついた画像が表示される */
+.pc {
+    display: flex !important;
+}
+.sp {
+    display: none !important; 
+    visibility: none !important;
+}
+ 
+/* スマートフォンで見たときは"sp"のclassがついた画像が表示される */
+/* @media only screen and (max-width: 750px) { */
+@media only screen and (max-width: 750px) {
+    .pc { display: none !important; }
+    .sp { display: block !important; }
+}
