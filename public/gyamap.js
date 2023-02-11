@@ -14,11 +14,11 @@ var map // GoogleMapsオブジェクト
 const blankimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
 var selectedimage = blankimage
 
-var clicked = false
+var loc_selected = false // 明示的に選択されたらtrueになる
 var clicktime
 var state = {} // pushstateで使う
 
-var sort_by_title = false
+var sorted_by_title = false
 var top_index = 0 // タイトルでソートしたときのトップ行のインデクス
 
 window.addEventListener('popstate', (event) => {
@@ -103,42 +103,36 @@ $(function () {
 
     $(window).keydown(function(e){
         e.preventDefault()
-        //alert(e.keyCode)
         // 38 が上, 40 が下
-        if(e.keyCode == 38){
-            if(! sort_by_title){
-                sort_by_title = true
+        if(e.keyCode == 38 || e.keyCode == 40){
+            if(! sorted_by_title){
+                sorted_by_title = true
                 var curtitle = locations[0].title
                 locations.sort((a, b) => {
                     return a.title > b.title ? 1 : -1;
                 })
-                for(top_index = 0; locations[top_index].title != curtitle; top_index++){}
+                for(top_index = 0; locations[top_index].title != curtitle; top_index++);
             }
             else {
-                if (top_index > 0) {
-                    top_index -= 1
+                if(e.keyCode == 38){
+                    if (top_index > 0) {
+                        top_index -= 1
+                    }
+                }
+                else { // keyCode = 40
+                    if (top_index < locations.length - 1) {
+                        top_index += 1
+                    }
                 }
             }
+            $('#imagelist').empty()
+            $('<img>')
+                .attr('src', `${locations[top_index].photo}/raw`)
+                .attr('class', 'largeimage')
+                .appendTo('#imagelist')
+            loc_selected = true
             showlists()
-            shownearbyimages()
-            map.panTo(new google.maps.LatLng(locations[top_index].latitude, locations[top_index].longitude))
-        }
-        if(e.keyCode == 40){
-            if(! sort_by_title){
-                sort_by_title = true
-                var curtitle = locations[0].title
-                locations.sort((a, b) => {
-                    return a.title > b.title ? 1 : -1;
-                })
-                for(top_index = 0; locations[top_index].title != curtitle; top_index++){}
-            }
-            else {
-                if (top_index < locations.length - 1) {
-                    top_index += 1
-                }
-            }
-            showlists()
-            shownearbyimages()
+            // shownearbyimages()
             map.panTo(new google.maps.LatLng(locations[top_index].latitude, locations[top_index].longitude))
         }
     });
@@ -195,7 +189,7 @@ function shownearbyimages() {
         img.attr('index', i+top_index)
         img.click(function (e) {
             top_index = 0
-            sort_by_title = false
+            sorted_by_title = false
             let ind = $(e.target).attr('index')
             map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
             let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
@@ -210,7 +204,7 @@ function shownearbyimages() {
                 .attr('src', selectedimage)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
-            clicked = true
+            loc_selected = true
             locSearchAndDisplay()
         })
     }
@@ -246,9 +240,9 @@ function initGoogleMaps(lat, lng) {
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', function () {
         top_index = 0
-        sort_by_title = false
+        sorted_by_title = false
         $('#image').attr('src', blankimage)
-        clicked = false
+        loc_selected = false
         locSearchAndDisplay()
         shownearbyimages()
     })
@@ -298,7 +292,7 @@ function showlists() {
         img.attr('photo', loc.photo)
         img.click(function (e) {
             top_index = 0
-            sort_by_title = false
+            sorted_by_title = false
             clicktime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
             let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
@@ -315,7 +309,7 @@ function showlists() {
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             curpos.zoom = map.getZoom()
-            clicked = true
+            loc_selected = true
             sort_by_location()
             showlists()
         })
@@ -335,7 +329,7 @@ function showlists() {
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
         })
-        if (!clicked || i != 0) {
+        if (!loc_selected || i != 0) {
             li.append(img)
         }
 
