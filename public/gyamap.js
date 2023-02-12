@@ -11,15 +11,15 @@ var locations = [] // POIリスト
 
 var map // GoogleMapsオブジェクト
 
-const blankimage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
-var selectedimage = blankimage
+const blankImage = 'https://i.gyazo.com/a9dd5417ae63c06ccddc2040adbd04af.png' // 空白画像
+var selectedImage = blankImage
 
-var loc_selected = false // 明示的に選択されたらtrueになる
-var clicktime
+var locSelected = false // 明示的に選択されたらtrueになる
+var clickTime
 var state = {} // pushstateで使う
 
-var sorted_by_title = false
-var top_index = 0 // タイトルでソートしたときのトップ行のインデクス
+var sortedByTitle = false
+var topIndex = 0 // タイトルでソートしたときのトップ行のインデクス
 
 window.addEventListener('popstate', (event) => {
     console.log(event)
@@ -88,7 +88,7 @@ $(function () {
             .then((data) => {
                 locations = JSON.parse(data)
                 locSearchAndDisplay() ///////
-                shownearbyimages() // 何故か出ないのはMapのせい?
+                showNearbyImages() // 何故か出ないのはMapのせい?
             })
     }
     else {
@@ -97,7 +97,7 @@ $(function () {
             .then((data) => {
                 locations = JSON.parse(data)
                 locSearchAndDisplay() ///////
-                shownearbyimages()
+                showNearbyImages()
             })
     }
 
@@ -105,35 +105,35 @@ $(function () {
         e.preventDefault()
         // 38 が上, 40 が下
         if(e.keyCode == 38 || e.keyCode == 40){
-            if(! sorted_by_title){
-                sorted_by_title = true
+            if(! sortedByTitle){
+                sortedByTitle = true
                 var curtitle = locations[0].title
                 locations.sort((a, b) => {
                     return a.title > b.title ? 1 : -1;
                 })
-                for(top_index = 0; locations[top_index].title != curtitle; top_index++);
+                for(topIndex = 0; locations[topIndex].title != curtitle; topIndex++);
             }
             else {
                 if(e.keyCode == 38){
-                    if (top_index > 0) {
-                        top_index -= 1
+                    if (topIndex > 0) {
+                        topIndex -= 1
                     }
                 }
                 else { // keyCode = 40
-                    if (top_index < locations.length - 1) {
-                        top_index += 1
+                    if (topIndex < locations.length - 1) {
+                        topIndex += 1
                     }
                 }
             }
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', `${locations[top_index].photo}/raw`)
+                .attr('src', `${locations[topIndex].photo}/raw`)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
-            loc_selected = true
+            locSelected = true
             showlists()
-            // shownearbyimages()
-            map.panTo(new google.maps.LatLng(locations[top_index].latitude, locations[top_index].longitude))
+            // showNearbyImages()
+            map.panTo(new google.maps.LatLng(locations[topIndex].latitude, locations[topIndex].longitude))
         }
     });
 })
@@ -176,20 +176,20 @@ function direction(angle) {
     return 'N'
 }
 
-function shownearbyimages() {
+function showNearbyImages() {
     $('#imagelist').empty()
     for (let i = 0; i < 6; i++) {
         let img = $('<img>')
-        if(i+top_index < locations.length){
-            img.attr('src', `${locations[i + top_index].photo}/raw`)
+        if(i+topIndex < locations.length){
+            img.attr('src', `${locations[i + topIndex].photo}/raw`)
                 .attr('class', 'smallimage')
-                .attr('title', locations[i + top_index].title)
+                .attr('title', locations[i + topIndex].title)
                 .appendTo('#imagelist')
         }
-        img.attr('index', i+top_index)
+        img.attr('index', i+topIndex)
         img.click(function (e) {
-            top_index = 0
-            sorted_by_title = false
+            topIndex = 0
+            sortedByTitle = false
             let ind = $(e.target).attr('index')
             map.panTo(new google.maps.LatLng(locations[ind].latitude, locations[ind].longitude))
             let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
@@ -198,13 +198,13 @@ function shownearbyimages() {
             locstr += `Z${map.getZoom()}`
             history.pushState(state, null, `?loc=${locstr}`)
 
-            selectedimage = `${locations[ind].photo}/raw`
+            selectedImage = `${locations[ind].photo}/raw`
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
+                .attr('src', selectedImage)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
-            loc_selected = true
+            locSelected = true
             locSearchAndDisplay()
         })
     }
@@ -212,7 +212,7 @@ function shownearbyimages() {
 
 function locSearchAndDisplay() {
     //alert('locSearchAndDisp')
-    // $('<img>').attr('src',blankimage).attr('height',400).appendTo('#imagelist')
+    // $('<img>').attr('src',blankImage).attr('height',400).appendTo('#imagelist')
     let mapcenter = map.getCenter();
     curpos.latitude = mapcenter.lat().toFixed(5)
     curpos.longitude = mapcenter.lng().toFixed(5)
@@ -222,7 +222,7 @@ function locSearchAndDisplay() {
     locstr += `Z${curpos.zoom}`
     history.pushState(state,null,`?loc=${locstr}`)
 
-    sort_by_location()
+    sortByLocation()
     showlists()
 }
 
@@ -239,12 +239,12 @@ function initGoogleMaps(lat, lng) {
 
     // http://sites.google.com/site/gmapsapi3/Home/v3_reference
     google.maps.event.addListener(map, 'dragend', function () {
-        top_index = 0
-        sorted_by_title = false
-        $('#image').attr('src', blankimage)
-        loc_selected = false
+        topIndex = 0
+        sortedByTitle = false
+        $('#image').attr('src', blankImage)
+        locSelected = false
         locSearchAndDisplay()
-        shownearbyimages()
+        showNearbyImages()
     })
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
@@ -254,7 +254,7 @@ function initGoogleMaps(lat, lng) {
     })
 }
 
-function sort_by_location(){
+function sortByLocation(){
     for (var i = 0; i < locations.length; i++) {
         entry = locations[i]
         entry.distance = distance(entry.latitude, entry.longitude, curpos.latitude, curpos.longitude)
@@ -270,8 +270,8 @@ function showlists() {
     
     $('#list').empty()
     // for (var i = 0; i < 20 && i < locations.length; i++) {
-    for (var i = 0; i < 20 && i + top_index < locations.length; i++) {
-        let loc = locations[i + top_index]
+    for (var i = 0; i < 20 && i + topIndex < locations.length; i++) {
+        let loc = locations[i + topIndex]
         //let li = $('<li>')
         let li = $('<div>')
         li.css('margin','0px')
@@ -291,30 +291,30 @@ function showlists() {
         img.attr('zoom', loc.zoom)
         img.attr('photo', loc.photo)
         img.click(function (e) {
-            top_index = 0
-            sorted_by_title = false
-            clicktime = Date.now()
+            topIndex = 0
+            sortedByTitle = false
+            clickTime = Date.now()
             map.panTo(new google.maps.LatLng($(e.target).attr('latitude'), $(e.target).attr('longitude')))
             let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
             + (loc.longitude > 0 ? `E${loc.longitude.toFixed(5)}` : `W${-loc.longitude.toFixed(5)}`)
             locstr += `Z${loc.zoom}`
             history.pushState(state,null,`?loc=${locstr}`)
             
-            selectedimage = `${$(e.target).attr('photo')}/raw`
+            selectedImage = `${$(e.target).attr('photo')}/raw`
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
+                .attr('src', selectedImage)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
             curpos.latitude = $(e.target).attr('latitude')
             curpos.longitude = $(e.target).attr('longitude')
             curpos.zoom = map.getZoom()
-            loc_selected = true
-            sort_by_location()
+            locSelected = true
+            sortByLocation()
             showlists()
         })
         img.mouseover(function (e) {
-            if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
+            if (Date.now() - clickTime > 500) { // クリック後すぐのmouseoverは無視
                 $('#imagelist').empty()
                 $('<img>')
                 .attr('src', `${$(e.target).attr('photo')}/raw`)
@@ -325,11 +325,11 @@ function showlists() {
         img.mouseleave(function (e) {
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
+                .attr('src', selectedImage)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
         })
-        if (!loc_selected || i != 0) {
+        if (!locSelected || i != 0) {
             li.append(img)
         }
 
@@ -350,7 +350,7 @@ function showlists() {
         e.css('margin','2px 6px 2px 2px')
         e.css('padding','0px')
         e.mouseover(function (e) {
-            if (Date.now() - clicktime > 500) { // クリック後すぐのmouseoverは無視
+            if (Date.now() - clickTime > 500) { // クリック後すぐのmouseoverは無視
                 $('#imagelist').empty()
                 $('<img>')
                     .attr('src', `${$(e.target).attr('photo')}/raw`)
@@ -361,7 +361,7 @@ function showlists() {
         e.mouseleave(function (e) {
             $('#imagelist').empty()
             $('<img>')
-                .attr('src', selectedimage)
+                .attr('src', selectedImage)
                 .attr('class', 'largeimage')
                 .appendTo('#imagelist')
         })
@@ -398,18 +398,18 @@ function showlists() {
                 marker[i] = null
             }
         }
-        for(let i=0;i<6 && i+top_index < locations.length;i++){
-            var latlng = new google.maps.LatLng(locations[i+top_index].latitude, locations[i+top_index].longitude)
+        for(let i=0;i<6 && i+topIndex < locations.length;i++){
+            var latlng = new google.maps.LatLng(locations[i+topIndex].latitude, locations[i+topIndex].longitude)
             /*
-            if(marker[i+top_index]){
-                marker[i+top_index].setMap(null)
-                marker[i+top_index] = null
+            if(marker[i+topIndex]){
+                marker[i+topIndex].setMap(null)
+                marker[i+topIndex] = null
             }
             */
-            marker[i+top_index] = new google.maps.Marker({
+            marker[i+topIndex] = new google.maps.Marker({
                 position: latlng
             })
-            marker[i+top_index].setMap(map);
+            marker[i+topIndex].setMap(map);
         }
     }
 }
@@ -418,9 +418,9 @@ function successCallback2(position) {
     mapsurl = "https://maps.google.com/maps?q=" +
     curpos.latitude + "," + curpos.longitude;
     initGoogleMaps(curpos.latitude, curpos.longitude)
-    sort_by_location()
+    sortByLocation()
     showlists()
-    shownearbyimages()
+    showNearbyImages()
 }
 
 function successCallback(position) {
@@ -430,9 +430,9 @@ function successCallback(position) {
     curpos.latitude = position.coords.latitude
     curpos.longitude = position.coords.longitude
     initGoogleMaps(curpos.latitude, curpos.longitude)
-    sort_by_location()
+    sortByLocation()
     showlists()
-    shownearbyimages()
+    showNearbyImages()
 }
 function errorCallback(error) {
     var err_msg = "";
@@ -453,7 +453,7 @@ function errorCallback(error) {
     curpos.latitude = 35.02914
     curpos.longitude = 135.75871
     initGoogleMaps(curpos.latitude, curpos.longitude)
-    sort_by_location()
+    sortByLocation()
     showlists()
-    shownearbyimages()
+    showNearbyImages()
 }
