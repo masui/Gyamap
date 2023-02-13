@@ -105,35 +105,37 @@ async function getlist_project(project,res){
         let desc = ""
         let a = text.split(/\n/)
         let title = a[0]
-        let entry = {}
-        for (let i = 1; i < a.length; i++) {
-            let line = a[i]
-            let match = line.match(/(https?:\/\/gyazo\.com\/[0-9a-f]{32})/) // Gyazo画像
-            if (match && !entry.photo) {
-                entry.photo = match[1]
-            }
-            else {
-                // match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
-                match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
-                if (match && !entry.latitude) {
-                    entry.title = title
-                    entry.latitude = Number(match[1]) // 西経の処理が必要!!
-                    entry.longitude = Number(match[2])
-                    entry.zoom = Number(match[3])
+        if(title[0] != '_' && title[title.length-1] != '.'){
+            let entry = {}
+            for (let i = 1; i < a.length; i++) {
+                let line = a[i]
+                let match = line.match(/(https?:\/\/gyazo\.com\/[0-9a-f]{32})/) // Gyazo画像
+                if (match && !entry.photo) {
+                    entry.photo = match[1]
                 }
                 else {
-                    if (!line.match(/^\s*$/) && desc == "") {
-                        if (!line.match(/\[http/)) {
-                            desc = line.replace(/\[/g, '').replace(/\]/g, '')
+                // match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
+                    match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
+                    if (match && !entry.latitude) {
+                        entry.title = title
+                        entry.latitude = Number(match[1]) // 西経の処理が必要!!
+                        entry.longitude = Number(match[2])
+                        entry.zoom = Number(match[3])
+                    }
+                    else {
+                        if (!line.match(/^\s*$/) && desc == "") {
+                            if (!line.match(/\[http/)) {
+                                desc = line.replace(/\[/g, '').replace(/\]/g, '')
+                            }
                         }
                     }
                 }
             }
-        }
-        entry.desc = desc
-        if (entry.latitude) {
-            datalist.push(entry)
-            console.log(`datalist.length = ${datalist.length}`)
+            entry.desc = desc
+            if (entry.latitude) {
+                datalist.push(entry)
+                console.log(`datalist.length = ${datalist.length}`)
+            }
         }
     }))
     console.log('end')
