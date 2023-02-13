@@ -134,6 +134,12 @@ $(function () {
             showlists()
             // showNearbyImages()
             map.panTo(new google.maps.LatLng(locations[topIndex].latitude, locations[topIndex].longitude))
+
+            let ind = topIndex
+            let locstr = (locations[ind].latitude > 0 ? `N${locations[ind].latitude}` : `S${-locations[ind].latitude}`)
+            + (locations[ind].longitude > 0 ? `E${locations[ind].longitude}` : `W${-locations[ind].longitude}`)
+            locstr += `Z${map.getZoom()}`
+            history.pushState(state, null, `?loc=${locstr}`)
         }
     });
 })
@@ -246,6 +252,16 @@ function initGoogleMaps(lat, lng) {
         locSearchAndDisplay()
         showNearbyImages()
     })
+
+    google.maps.event.addListener(map, 'zoom_changed', function() {
+        let loc = locations[topIndex]
+        let locstr = (loc.latitude > 0 ? `N${loc.latitude.toFixed(5)}` : `S${-loc.latitude.toFixed(5)}`)
+        + (loc.longitude > 0 ? `E${loc.longitude.toFixed(5)}` : `W${-loc.longitude.toFixed(5)}`)
+        locstr += `Z${map.getZoom()}`
+        console.log(locstr)
+        history.pushState(state,null,`?loc=${locstr}`)
+    });
+
     //google.maps.event.addListener(map, 'click', locSearchAndDisplay);
     //google.maps.event.addListener(map, 'zoom_changed', locSearchAndDisplay);
     google.maps.event.addListener(map, 'keydown', function (e) {
