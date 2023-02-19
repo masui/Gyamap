@@ -33,7 +33,7 @@ span.tab {
 }
 
 .smallimage {
-    height: 130px;
+    height: 120px;
     margin: 3px;
     border-radius: 4px;
 }
@@ -75,6 +75,7 @@ span.tab {
 
 .moveimage {
     height: 18px;
+    margin: -2px 2px 0px 2px;
 }
 
 @media screen and (max-width: 1000px) {
@@ -94,7 +95,8 @@ span.tab {
      height: 60px;
    }
    .moveimage {
-     height: 30px;
+     height: 50px;
+     margin: 5px 2px 0px 2px;
    }
  }
 

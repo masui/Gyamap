@@ -294,14 +294,15 @@ function showlists() {
         let li = $('<div>')
         li.css('margin','0px')
         li.css('padding','0px')
-        li.css('display','flex')
+        //li.css('display','flex')
         li.addClass(list)
         
         let img = $('<img>')
         let d = direction(angle(curpos.latitude, curpos.longitude, loc.latitude, loc.longitude))
         //img.attr('src', `https://Gyamap.com/move_${d}.png`)
         img.addClass('moveimage')
-        img.css('margin','3px 2px 0px 0px') ///////
+        //xxximg.css('margin','3px 2px 0px 0px') ///////
+        //yyyimg.css('margin','-10px 2px 0px 0px')
         img.css('padding','0px')
         img.attr('src', `/move_${d}.png`)
         //img.attr('height', '16px')
@@ -366,7 +367,8 @@ function showlists() {
             .attr('href', `https://scrapbox.io/${project}/${loc.title}`)
             .attr('target', '_blank')
         e.attr('photo', loc.photo)
-        e.css('margin','2px 2px 2px 2px')//////
+        //xxxe.css('margin','2px 2px 2px 2px')//////
+        e.css('margin','0px 2px 0px 2px')
         e.css('padding','0px')
         e.mouseover(function (e) {
             if (Date.now() - clickTime > 500) { // クリック後すぐのmouseoverは無視
@@ -395,7 +397,8 @@ function showlists() {
         let desc = $("<span>")
             .text(loc.desc)
             .css('height','16px')
-            .css('margin','2px 2px 2px 2px') ///////
+            //xxx.css('margin','2px 2px 2px 2px') ///////
+            .css('margin','0px 2px 0px 2px')
             .css('padding','0px')
         li.append(desc)
         
