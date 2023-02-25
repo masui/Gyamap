@@ -134,7 +134,7 @@ async function getlist_project(project,res){
             entry.desc = desc
             if (entry.latitude) {
                 datalist.push(entry)
-                console.log(`datalist.length = ${datalist.length}`)
+                // console.log(`datalist.length = ${datalist.length}`)
             }
         }
     }))

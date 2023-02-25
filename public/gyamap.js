@@ -63,6 +63,7 @@ $(function () {
             }
         }
     }
+
     if (curpos.latitude) { // URLで引数が指定されていた場合
         navigator.geolocation.getCurrentPosition(successCallback2, errorCallback) // なぜかこれを入れると動く
     }
@@ -305,8 +306,6 @@ function showlists() {
         //yyyimg.css('margin','-10px 2px 0px 0px')
         img.css('padding','0px')
         img.attr('src', `/move_${d}.png`)
-        //img.attr('height', '16px')
-        // img.css('height','18px')
         img.attr('latitude', loc.latitude.toFixed(5))
         img.attr('longitude', loc.longitude.toFixed(5))
         img.attr('zoom', loc.zoom)
@@ -396,8 +395,7 @@ function showlists() {
 
         let desc = $("<span>")
             .text(loc.desc)
-            .css('height','16px')
-            //xxx.css('margin','2px 2px 2px 2px') ///////
+            //.css('height','16px')
             .css('margin','0px 2px 0px 2px')
             .css('padding','0px')
         li.append(desc)
@@ -469,7 +467,7 @@ function errorCallback(error) {
             err_msg = "タイムアウトしました";
             break;
     }
-    // alert(err_msg)
+    alert(err_msg)
     //document.getElementById("show_result").innerHTML = err_msg;
 
     curpos.latitude = 35.02914

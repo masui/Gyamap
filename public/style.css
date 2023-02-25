@@ -71,6 +71,11 @@ span.tab {
       height:400px;
       margin:4px;
       border-radius:4px;
+      flex-grow: 1;
+}
+
+#imagelist {
+    
 }
 
 .moveimage {
