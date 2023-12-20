@@ -114,7 +114,6 @@ async function getlist_project(project,res){
                     entry.photo = match[1]
                 }
                 else {
-                // match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)\]/) // 地図が登録されている場合
                     match = line.match(/\[N([\d\.]+),E([\d\.]+),Z([\d\.]+)(\s+\S+)?\]/) // 地図が登録されている場合
                     if (match && !entry.latitude) {
                         entry.title = title
@@ -125,7 +124,7 @@ async function getlist_project(project,res){
                     else {
                         if (!line.match(/^\s*$/) && desc == "") {
                             if (!line.match(/\[http/)) {
-                                desc = line.replace(/\[/g, '').replace(/\]/g, '')
+                                desc = line.replace(/\[/g, '').replace(/\]/g, '').replace(/#/g,'')
                             }
                         }
                     }
