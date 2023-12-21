@@ -65,9 +65,9 @@ span.tab {
 #container {
     display: flex;
 }
-
+/*
 #mapcanvas {
-      width:400px;
+    width:400px;
       max-width:400px;
       min-width:400px;
       height:400px;
@@ -76,6 +76,7 @@ span.tab {
       display:block;
       flex-grow: 1;
 }
+*/
 
 #imagelist {
     
@@ -84,6 +85,19 @@ span.tab {
 .moveimage {
     height: 18px;
     margin: -2px 2px 0px 2px;
+}
+
+@media screen and (min-width: 1000px) {
+    #mapcanvas {
+	width:400px;
+	max-width:400px;
+	min-width:400px;
+	height:400px;
+	margin:4px;
+	border-radius:4px;
+	display:block;
+	flex-grow: 1;
+    }
 }
 
 @media screen and (max-width: 1000px) {
