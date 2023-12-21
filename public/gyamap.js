@@ -187,7 +187,7 @@ function direction(angle) {
 
 function showNearbyImages() {
     $('#imagelist').empty()
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         let img = $('<img>')
         if(i+topIndex < locations.length){
             img.attr('src', `${locations[i + topIndex].photo}/raw`)
